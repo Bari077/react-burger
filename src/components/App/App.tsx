@@ -2,7 +2,8 @@ import React from 'react';
 import AppHeader from '../App-Header/App-Header';
 import BurgerIngredients from '../Burger-Ingrdients/Burger-Ingredients';
 import BurgerConstructor from '../Burger-Constructor/Burger-Constructor';
-import { ingredientsData } from '../../utils/data';
+
+
 
 
 const App =()=> { 
@@ -24,9 +25,8 @@ const App =()=> {
   }, [])
   
   
-  return (    
-    <body>
-      <div className="App">
+  return (
+    <div className="App">
         <AppHeader />
           <main className="main">
             <h2 className="text text_type_main-large pl-5 pb-5">Соберите бургер</h2>
@@ -36,8 +36,6 @@ const App =()=> {
             </div>        
           </main>      
       </div>
-      <div id="react-modals"></div>
-    </body>
   );
 }
 

@@ -45,7 +45,7 @@ const BurgerConstructor =(props)=> {
             </div>
             <div className={burgerStyle.total}>
                 <p className="text text_type_digits-medium pr-3">610</p>
-                <div className="mr-10" style={{ transform: 'scale(1.5)'}}> <CurrencyIcon type="primary" /></div>                
+                <div className="mr-10" style={{ transform: 'scale(1.5)', zIndex: -1}}> <CurrencyIcon type="primary" /></div>                
                 <Button htmlType="button" type="primary" size="large">
                     Оформить заказ
                 </Button>

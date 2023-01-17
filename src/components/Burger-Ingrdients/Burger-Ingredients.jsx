@@ -3,6 +3,7 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerIngredientsStyle from './Burger-Ingredients.module.css';
+import Modal from '../Modal/Modal';
 
 const SwitchIngredients = () => {
     const [current, setCurrent] = React.useState('one')
@@ -68,7 +69,22 @@ const Filling =({item}) => {
 
 
 const BurgerIngredients =(props)=> {
-        
+    console.log(props);
+    const [modalState, setModal] = React.useState({visible : false});
+    const handleOpenModal =()=> {
+        setModal({ visible: true });
+    }
+ 
+    const handleCloseModal =()=> {
+        setModal({ visible: false });
+    }
+    
+    const modal = (
+        <Modal onClose={handleCloseModal}> 
+           
+        </Modal>
+    );
+
     return(
         <section className={burgerIngredientsStyle.section}>                
             <SwitchIngredients />
@@ -91,7 +107,11 @@ const BurgerIngredients =(props)=> {
                         <Filling item={item} key={index}/>
                     ))}                                   
                 </ul>
-            </article>                                                                  
+            </article>
+            <div>
+                <button onClick={handleOpenModal}>Открыть модальное окно</button>
+                {modalState.visible && modal}
+            </div>                                                                  
         </section>
     )
 }

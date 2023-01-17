@@ -1,22 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import modalStyle from './Modal.module.css';
+import ModalOverlay from '../Modal-Overlay/Modal-Overlay';
+import OrderDetails from '../Order-Details/Order-Details';
+import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
 
-const modalRoot = document.getElementById('react-modals');
 
-const Modal = (props)=> {
-    const { children, header, onClose } = props;
-    return ReactDOM.createPortal(
-        (
-            <>
-                <div className="Modal">
-                <div onClose={onClose}>{header}</div>
-                    {children}
-                </div>
-                <button onClose={onClose}>закрыть</button>
-            </>
-        ), 
-        modalRoot
-    );
+
+const Modal = props=> {
+    return(
+        <div className={modalStyle.modal}>
+            <ModalOverlay/>
+            <div className={modalStyle.container}>
+                <IngredientDetails />
+                <button className={modalStyle.close} type="button"></button>
+            </div>                            
+        </div>
+    )
 }
 
 export default Modal;
