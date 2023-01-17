@@ -16,7 +16,7 @@ const BurgerConstructor =(props)=> {
                         isLocked={true}
                         text="Краторная булка N-200i (верх)"
                         price={200}
-                        thumbnail={props.data[0].image}
+                        thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
                     />
                 </div>
                 <ul className={burgerStyle.list}>
@@ -39,7 +39,7 @@ const BurgerConstructor =(props)=> {
                         isLocked={true}
                         text="Краторная булка N-200i (низ)"
                         price={20}
-                        thumbnail={props.data[0].image}
+                        thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
                     />
                 </div>
             </div>

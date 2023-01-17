@@ -67,37 +67,34 @@ const Filling =({item}) => {
 }
 
 
-class BurgerIngredients extends React.Component {     
-    
-      
-    render() { 
-
-        return(
-            <section className={burgerIngredientsStyle.section}>                
-                <SwitchIngredients />
-                <article className={burgerIngredientsStyle.container}>
-                    <h3 className="text text_type_main-medium pt-10">Булки</h3>
-                    <ul className={burgerIngredientsStyle.list}>
-                        {this.props.data.map((item, index) => (
-                            <Bun item={item} key={index}/>
-                        ))}                                   
-                    </ul>
-                    <h3 className="text text_type_main-medium pt-10">Соусы</h3>
-                    <ul className={burgerIngredientsStyle.list}>
-                        {this.props.data.map((item, index) => (
-                            <Sauce item={item} key={index}/>
-                        ))}                                   
-                    </ul> 
-                    <h3 className="text text_type_main-medium pt-10">Начинки</h3>
-                    <ul className={burgerIngredientsStyle.list}>
-                        {this.props.data.map((item, index) => (
-                            <Filling item={item} key={index}/>
-                        ))}                                   
-                    </ul>
-                </article>                                                                  
-            </section>
-        )
-    }
+const BurgerIngredients =(props)=> {
+        
+    return(
+        <section className={burgerIngredientsStyle.section}>                
+            <SwitchIngredients />
+            <article className={burgerIngredientsStyle.container}>
+                <h3 className="text text_type_main-medium pt-10">Булки</h3>
+                <ul className={burgerIngredientsStyle.list}>
+                    {props.ingredients.map((item, index) => (
+                        <Bun item={item} key={index}/>
+                    ))}                                   
+                </ul>
+                <h3 className="text text_type_main-medium pt-10">Соусы</h3>
+                <ul className={burgerIngredientsStyle.list}>
+                    {props.ingredients.map((item, index) => (
+                        <Sauce item={item} key={index}/>
+                    ))}                                   
+                </ul> 
+                <h3 className="text text_type_main-medium pt-10">Начинки</h3>
+                <ul className={burgerIngredientsStyle.list}>
+                    {props.ingredients.map((item, index) => (
+                        <Filling item={item} key={index}/>
+                    ))}                                   
+                </ul>
+            </article>                                                                  
+        </section>
+    )
 }
+
 
 export default BurgerIngredients;
