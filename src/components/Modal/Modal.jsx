@@ -1,21 +1,44 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import modalStyle from './Modal.module.css';
 import ModalOverlay from '../Modal-Overlay/Modal-Overlay';
-import OrderDetails from '../Order-Details/Order-Details';
-import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
 
 
+const Modal = ({onClose, ...props})=> {
+    const modalRoot = document.getElementById('react-modals');
 
-const Modal = props=> {
-    return(
-        <div className={modalStyle.modal}>
-            <ModalOverlay/>
+    const handleOverlayClose =(e)=> {
+       e.stopPropagation();
+       e.currentTarget && onClose();
+    }
+
+    const handleEscClose =(e)=> {
+        e.key === 'Escape' && onClose();
+    }
+
+    React.useEffect(()=> {        
+        document.addEventListener('keydown', handleEscClose);
+        return()=> {
+          document.removeEventListener('keydown', handleEscClose);
+        }
+    },[])  
+
+    return ReactDOM.createPortal(
+        (<div className={modalStyle.modal}>
+            <ModalOverlay onClose={handleOverlayClose}/>
             <div className={modalStyle.container}>
-                <IngredientDetails />
-                <button className={modalStyle.close} type="button"></button>
+                {props.children}
+                <button className={modalStyle.close} type="button" onClick={onClose}></button>
             </div>                            
-        </div>
-    )
+        </div>),
+        modalRoot
+    );
+}
+
+Modal.propTypes = {
+    children: PropTypes.node.isRequired,
+    onClose: PropTypes.func.isRequired,
 }
 
 export default Modal;

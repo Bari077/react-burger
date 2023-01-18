@@ -1,4 +1,3 @@
-import React from 'react';
 import orderStyle from './Order-Details.module.css';
 import doneImg from '../../images/done.svg';
 
