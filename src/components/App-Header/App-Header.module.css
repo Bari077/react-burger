@@ -33,3 +33,7 @@
 .element:first-of-type {
     margin-left: 0;
 }
+
+.link {
+    text-decoration: none;
+}

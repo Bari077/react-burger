@@ -17,16 +17,16 @@ function AppHeader() {
                 <nav className={appHeaderStyle.menu}>
                     <li className={appHeaderStyle.element}>
                         <BurgerIcon type="secondary"/>
-                        <p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Конструктор</p>
+                        <a href="#" className={appHeaderStyle.link}><p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Конструктор</p></a>
                     </li>
                     <li className={appHeaderStyle.element}>
                         <ListIcon type="secondary" />
-                        <p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Лента заказов</p>
+                       <a href="#" className={appHeaderStyle.link}><p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Лента заказов</p></a>
                     </li>
                 </nav>                    
                 <div className={appHeaderStyle.element}>
                     <ProfileIcon type="secondary" />
-                    <p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Личный кабинет</p>
+                    <a href="#" className={appHeaderStyle.link}><p style={{ color: '#8585AD' }} className="text text_type_main-default pl-2">Личный кабинет</p></a>
                 </div>
             </div>                
         </header>
