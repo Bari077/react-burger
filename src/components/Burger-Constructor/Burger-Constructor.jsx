@@ -7,11 +7,24 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
+import { ingredientsPropTypes } from '../../utils/utils';
 
 const BurgerConstructor =(props)=> { 
     const [modalState, setModal] = React.useState({visible : false});
+    const [total, setTotal] = React.useState(0);
+
+    const calcSum =()=> {
+        const summary = props.data.map((item)=> item.price).reduce(function(sum,i) {
+            return sum + i});
+        setTotal(summary)
+    }
+
+    React.useEffect(()=> {
+        calcSum();
+    });
+
     const handleOpenModal =()=> {       
-        setModal({ visible: true });       
+        setModal({ visible: true });            
     }
  
     const handleCloseModal =()=> {
@@ -61,19 +74,19 @@ const BurgerConstructor =(props)=> {
                 </div>
             </div>
             <div className={burgerStyle.total}>
-                <p className="text text_type_digits-medium pr-3">610</p>
+                <p className="text text_type_digits-medium pr-3">{total}</p>
                 <div className="mr-10" style={{ transform: 'scale(1.5)', zIndex: -1}}> <CurrencyIcon type="primary" /></div>                
                 <Button htmlType="button" type="primary" size="large" onClick={handleOpenModal}>
                     Оформить заказ
                 </Button>
-            </div>
+            </div>            
             {modalState.visible && modal}        
         </section>
     )
 }
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.array.isRequired
+    data: PropTypes.arrayOf(ingredientsPropTypes).isRequired
 }
 
 export default BurgerConstructor;

@@ -13,16 +13,19 @@ const Modal = ({onClose, ...props})=> {
        e.currentTarget && onClose();
     }
 
-    const handleEscClose =(e)=> {
+    const handleEscClose = React.useCallback((e)=> {
         e.key === 'Escape' && onClose();
-    }
+        console.log(e.key)
+    },
+    []
+    );
 
     React.useEffect(()=> {        
         document.addEventListener('keydown', handleEscClose);
         return()=> {
           document.removeEventListener('keydown', handleEscClose);
         }
-    },[])  
+    })  
 
     return ReactDOM.createPortal(
         (<div className={modalStyle.modal}>

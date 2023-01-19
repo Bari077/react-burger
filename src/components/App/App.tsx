@@ -2,7 +2,7 @@ import React from 'react';
 import AppHeader from '../App-Header/App-Header';
 import BurgerIngredients from '../Burger-Ingrdients/Burger-Ingredients';
 import BurgerConstructor from '../Burger-Constructor/Burger-Constructor';
-
+import {getIngredients}  from '../../utils/utils';
 
 
 
@@ -14,28 +14,10 @@ const App =()=> {
       data: []
     });
 
-  const url = 'https://norma.nomoreparties.space/api/ingredients';
-
-  React.useEffect(()=> {
-    const getIngredients = ()=> {
-      fetch(url)
-        .then(response=> {
-          if(response.ok) {
-            return response.json()
-        }
-        return Promise.reject(`Ошибка: ${response.status}`);  
-        })
-        .then((res)=> {
-          const data= res.data;
-          setState({...state, data, isLoading: false})
-        })
-        .catch(()=> {
-          setState({...state, hasError: true, isLoading: false})
-        })
-         
-    }
-    getIngredients();    
-  }, [])
+  
+  React.useEffect(()=> {    
+    getIngredients({setState, state});    
+  }, [state])
   
   
   return (
@@ -43,7 +25,7 @@ const App =()=> {
     {state.isLoading && 'Загрузка...'}
     {state.hasError && 'Произошла ошибка'}
     {!state.isLoading && !state.hasError && state.data.length && (
-      <>      
+           
         <div className="App">
           <AppHeader />
             <main className="main">
@@ -53,9 +35,7 @@ const App =()=> {
                 <BurgerConstructor data={state.data}/>   
               </div>        
             </main>      
-        </div>
-        <div id="react-modals"></div>
-      </>
+        </div>      
       )}
     </>
   );

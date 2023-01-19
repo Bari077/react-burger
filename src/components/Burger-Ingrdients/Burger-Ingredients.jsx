@@ -6,6 +6,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerIngredientsStyle from './Burger-Ingredients.module.css';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
+import { ingredientsPropTypes } from '../../utils/utils';
 
 
 
@@ -15,11 +16,11 @@ const BurgerIngredients =(props)=> {
     const [currentIngredient, setCurrentIngredient] = React.useState();
     const handleOpenModal =(index)=> {
         setCurrentIngredient(props.ingredients[index]);
-        setModal({ visible: true });       
+        setModal({ visible: true });               
     }
  
     const handleCloseModal =()=> {
-        setModal({ visible: false });
+        setModal({ visible: false });        
     }
     
     const modal = (
@@ -98,7 +99,7 @@ const BurgerIngredients =(props)=> {
 }
 
 BurgerIngredients.propTypes = {
-    ingredients: PropTypes.array.isRequired
+    ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired
 }
 
 export default BurgerIngredients;
