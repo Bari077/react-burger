@@ -9,6 +9,7 @@ import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { ingredientsPropTypes } from '../../utils/utils';
 
+
 const BurgerConstructor =(props)=> { 
     const [modalState, setModal] = React.useState({visible : false});
     const [total, setTotal] = React.useState(0);
@@ -19,7 +20,7 @@ const BurgerConstructor =(props)=> {
         setTotal(summary)
     }
 
-    React.useEffect(()=> {
+    React.useEffect(()=> {        
         calcSum();
     });
 

@@ -10,13 +10,14 @@ import { ingredientsPropTypes } from '../../utils/utils';
 
 
 
+
 const BurgerIngredients =(props)=> {
     const [current, setCurrent] = React.useState('one');
     const [modalState, setModal] = React.useState({visible : false});
     const [currentIngredient, setCurrentIngredient] = React.useState();
     const handleOpenModal =(index)=> {
         setCurrentIngredient(props.ingredients[index]);
-        setModal({ visible: true });               
+        setModal({ visible: true });                       
     }
  
     const handleCloseModal =()=> {
