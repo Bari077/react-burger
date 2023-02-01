@@ -2,7 +2,7 @@ import React from 'react';
 import AppHeader from '../App-Header/App-Header';
 import BurgerIngredients from '../Burger-Ingrdients/Burger-Ingredients';
 import BurgerConstructor from '../Burger-Constructor/Burger-Constructor';
-import {getIngredients}  from '../../utils/utils';
+import { getIngredients } from '../../utils/burger-api';
 import { IngredientsContext } from '../../services/ingredientsContext';
 import { BurgerConstructorContext } from '../../services/burgerConstructorContext';
 
@@ -20,7 +20,14 @@ const App =()=> {
   
      
   React.useEffect(()=> {    
-    getIngredients({ state, setState });    
+    getIngredients()
+    .then((res)=> {
+      const data= res.data;
+      setState({...state, data, isLoading: false})
+    })
+    .catch(()=> {
+      setState({...state, hasError: true, isLoading: false})
+    })      
   }, []
   );  
   
@@ -46,9 +53,9 @@ const App =()=> {
               <div className="content">                          
                 <BurgerIngredients ingredients={state.data}/>
                 <IngredientsContext.Provider value={[state.data]}>
-                <BurgerConstructorContext.Provider value={{constructorState, setConstructorState}}>
-                  <BurgerConstructor />
-                </BurgerConstructorContext.Provider> 
+                  <BurgerConstructorContext.Provider value={{constructorState, setConstructorState}}>
+                    <BurgerConstructor />
+                  </BurgerConstructorContext.Provider> 
                 </IngredientsContext.Provider>                  
               </div>        
             </main>      

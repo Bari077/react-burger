@@ -6,8 +6,7 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
-import { url } from '../../global/global';
-import checkResponse from '../../utils/utils';
+import { postOrder } from '../../utils/burger-api';
 import { IngredientsContext } from '../../services/ingredientsContext';
 import { BurgerConstructorContext } from '../../services/burgerConstructorContext';
 
@@ -31,9 +30,7 @@ const BurgerConstructor =()=> {
         const randBun = Math.floor(Math.random() * arrBun.length)
         randomArr.unshift(arrBun[randBun]);
         return randomArr        
-    } 
-    const constructorIngredients = createRandomIngredients(ingredients, 5);
-    
+    }     
 
     const {constructorState, setConstructorState} = React.useContext(BurgerConstructorContext);
     const [orderDetails, setOrderDetails] = React.useState(
@@ -44,6 +41,7 @@ const BurgerConstructor =()=> {
     );
     
     React.useEffect(() => {
+        const constructorIngredients = createRandomIngredients(ingredients, 5);
         setConstructorState(
             {
             ...constructorState,
@@ -53,15 +51,14 @@ const BurgerConstructor =()=> {
         })
     }, [])
 
-   
+   //здесь начальной ставлю стоимость одной булки, т.к. при сведении сумма второй булки сидит в самом массиве
     const calcSum =()=> {
-        const summary = constructorState.data.map((item)=> item.price).reduce(function(sum,i) {
-            return sum + i}) + constructorState.data[0].price;
+        const summary = constructorState.data.reduce((sum, item) => sum + item.price, constructorState.data[0].price);
         setTotal(summary)
     }
 
     React.useEffect(()=> {        
-        if(constructorState.data !== '') {
+        if(constructorState.data.length !== 0) {
             calcSum();
         }        
     }, [constructorState.data]);
@@ -81,16 +78,10 @@ const BurgerConstructor =()=> {
         const order = {
             "ingredients" : idList    
         }
-        fetch(`${url}orders`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        }).then(response => checkResponse(response))
+        postOrder(order)
         .then(data => {
             if(data.success) {
-                setOrderDetails({...orderDetails, name: data.name, order: {number: data.order.number}});
+                setOrderDetails({ name: data.name, order: {number: data.order.number}});
                 handleOpenModal()
             };                                 
         })
@@ -108,7 +99,7 @@ const BurgerConstructor =()=> {
     return(
 
         <section className={burgerStyle.section}>
-            <div className="pl-4 pr-4" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className={burgerStyle.container}>
                 <div className="pl-8 pb-4">
                     {constructorState.hasBun &&                    
                     <ConstructorElement
@@ -124,7 +115,7 @@ const BurgerConstructor =()=> {
                     {constructorState.hasIngredients && constructorState.data.map((item, index)=> 
                     item.type !== 'bun' &&
                     (
-                    <li style={{ display: 'flex', columnGap: '8px', alignItems: 'center' }} className="pb-4" key={index}>
+                    <li className={burgerStyle.item} key={index}>
                         <DragIcon type="primary" />                    
                         <ConstructorElement 
                             type= "default"
@@ -150,7 +141,7 @@ const BurgerConstructor =()=> {
             </div>
             <div className={burgerStyle.total}>
                 <p className="text text_type_digits-medium pr-3">{total}</p>
-                <div className="mr-10" style={{ transform: 'scale(1.5)', zIndex: -1}}> <CurrencyIcon type="primary" /></div>                
+                <div className={burgerStyle.order} > <CurrencyIcon type="primary" /></div>                
                 <Button htmlType="button" type="primary" size="large" onClick={sendOrder}>
                     Оформить заказ
                 </Button>

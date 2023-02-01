@@ -1,14 +1,4 @@
-import { url } from "../global/global";
 import PropTypes from 'prop-types';
-
-
-export default function checkResponse(response) {
-    if(response.ok) {
-        return response.json()
-    }
-    return Promise.reject(`Что-то пошло не так: ${response.status}`);    
-};
-
 
 export const ingredientsPropTypes = PropTypes.shape({
     _id: PropTypes.string,
@@ -25,17 +15,6 @@ export const ingredientsPropTypes = PropTypes.shape({
     __v: PropTypes.number,   
 })
 
-export const getIngredients = ({ state, setState })=> {
-    fetch(`${url}ingredients`)
-      .then(response=> checkResponse(response))
-      .then((res)=> {
-        const data= res.data;
-        setState({...state, data, isLoading: false})
-      })
-      .catch(()=> {
-        setState({...state, hasError: true, isLoading: false})
-      })
-       
-  };
+
 
   
