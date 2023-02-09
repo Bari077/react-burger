@@ -6,62 +6,41 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
-import { postOrder } from '../../utils/burger-api';
-import { IngredientsContext } from '../../services/ingredientsContext';
-import { BurgerConstructorContext } from '../../services/burgerConstructorContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { getConstructorItems, sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/index';
 
 
 
 
 const BurgerConstructor =()=> { 
+    const ingredients = useSelector(store => store.ingredientsReducer.items);
+    
     const [modalState, setModal] = React.useState({visible : false});
-    const [total, setTotal] = React.useState(0);
-    const [ingredients] = React.useContext(IngredientsContext);
+    const [total, setTotal] = React.useState(0);   
 
-    //функция создания массива с случайными ингредиентами
-    const createRandomIngredients =(arr, n)=> {
-        const arrNoBun = arr.filter(i => i.type !== 'bun');
-        const arrBun = arr.filter(i => i.type === 'bun');
-        const randomArr = [];
-        for(let i=0; i <=n; i++ ) {            
-            const rand = Math.floor(Math.random() * arrNoBun.length);
-            randomArr.push(arrNoBun[rand])
-        }
-        const randBun = Math.floor(Math.random() * arrBun.length)
-        randomArr.unshift(arrBun[randBun]);
-        return randomArr        
-    }     
+    const dispatch = useDispatch();
+    const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
+    const hasBun = useSelector(state=> state.constructorReducer.hasBun);
+    const orderRequest = useSelector(state=> state.orderReducer.orderRequest);
+    const orderFailed = useSelector(state=> state.orderReducer.orderFailed);
 
-    const {constructorState, setConstructorState} = React.useContext(BurgerConstructorContext);
-    const [orderDetails, setOrderDetails] = React.useState(
-        {
-            name: '',
-            order: {number: 0}
-        }
-    );
+
     
     React.useEffect(() => {
-        const constructorIngredients = createRandomIngredients(ingredients, 5);
-        setConstructorState(
-            {
-            ...constructorState,
-            hasIngredients : true,
-            hasBun : true,
-            data : constructorIngredients
-        })
-    }, [])
+        dispatch(getConstructorItems(ingredients));             
+    }, []);
 
-   //здесь начальной ставлю стоимость одной булки, т.к. при сведении сумма второй булки сидит в самом массиве
+   
     const calcSum =()=> {
-        const summary = constructorState.data.reduce((sum, item) => sum + item.price, constructorState.data[0].price);
+        const summary = constructorIngredients.reduce((sum, item) => sum + item.price, constructorIngredients[0].price);
         setTotal(summary)
     }
 
     React.useEffect(()=> {        
-        if(constructorState.data.length !== 0) {
+        if(constructorIngredients.length !== 0) {
             calcSum();
         }        
-    }, [constructorState.data]);
+    }, [constructorIngredients]);
 
     const handleOpenModal =()=> {       
         setModal({ visible: true });
@@ -69,30 +48,19 @@ const BurgerConstructor =()=> {
  
     const handleCloseModal =()=> {
         setModal({ visible: false });
+        dispatch({ type: REMOVE_ORDER_DETAILS });
     }
 
-    
-
-    const sendOrder =()=> {
-        const idList = constructorState.data.map((i) => i._id)
-        const order = {
-            "ingredients" : idList    
+    const confirmOrder =()=> {
+        dispatch(sendOrder(constructorIngredients));
+        if(!orderRequest && !orderFailed) {
+            handleOpenModal()
         }
-        postOrder(order)
-        .then(data => {
-            if(data.success) {
-                setOrderDetails({ name: data.name, order: {number: data.order.number}});
-                handleOpenModal()
-            };                                 
-        })
-        .catch((err) => {
-            alert(err)
-        })        
     }
-    
+   
     const modal = (
         <Modal onClose={handleCloseModal} >            
-            <OrderDetails orderNumber ={orderDetails.order.number} />           
+            <OrderDetails />           
         </Modal>
     );    
 
@@ -101,18 +69,18 @@ const BurgerConstructor =()=> {
         <section className={burgerStyle.section}>
             <div className={burgerStyle.container}>
                 <div className="pl-8 pb-4">
-                    {constructorState.hasBun &&                    
+                    {hasBun &&                    
                     <ConstructorElement
                     type="top"
                     isLocked={true}
-                    text={constructorState.data[0].name + ' (верх)'}
-                    price={constructorState.data[0].price}
-                    thumbnail={constructorState.data[0].image}
-                    key={constructorState.data[0]._id}
+                    text={constructorIngredients[0].name + ' (верх)'}
+                    price={constructorIngredients[0].price}
+                    thumbnail={constructorIngredients[0].image}
+                    key={constructorIngredients[0]._id}
                     />}                                        
                 </div>
                 <ul className={burgerStyle.list}>
-                    {constructorState.hasIngredients && constructorState.data.map((item, index)=> 
+                    {constructorIngredients.length && constructorIngredients.map((item, index)=> 
                     item.type !== 'bun' &&
                     (
                     <li className={burgerStyle.item} key={index}>
@@ -128,21 +96,21 @@ const BurgerConstructor =()=> {
                     ))}
                 </ul>                
                 <div className="pt-4 pl-8">
-                        {constructorState.hasBun && 
+                        {hasBun && 
                         <ConstructorElement
                         type="bottom"
                         isLocked={true}
-                        text={constructorState.data[0].name + ' (низ)'}
-                        price={constructorState.data[0].price}
-                        thumbnail={constructorState.data[0].image}
-                        key={constructorState.data[0]._id}
+                        text={constructorIngredients[0].name + ' (низ)'}
+                        price={constructorIngredients[0].price}
+                        thumbnail={constructorIngredients[0].image}
+                        key={constructorIngredients._id}
                         />}                 
                 </div>
             </div>
             <div className={burgerStyle.total}>
                 <p className="text text_type_digits-medium pr-3">{total}</p>
                 <div className={burgerStyle.order} > <CurrencyIcon type="primary" /></div>                
-                <Button htmlType="button" type="primary" size="large" onClick={sendOrder}>
+                <Button htmlType="button" type="primary" size="large" onClick={confirmOrder}>
                     Оформить заказ
                 </Button>
             </div>            
