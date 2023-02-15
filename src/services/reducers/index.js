@@ -4,11 +4,15 @@ import {
     GET_INITIAL_ITEMS_FAILED,
     SET_INGREDIENT_DETAILS,
     REMOVE_INGREDIENT_DETAILS,
-    GET_CONSTRUCTOR_ITEMS,    
+    ADD_CONSTRUCTOR_ITEM,
+    ADD_CONSTRUCTOR_BUN,
+    DELETE_CONSTRUCTOR_ITEM,
+    SORT_CONSTRUCTOR,
+    RESET_CONSTRUCTOR,    
     POST_ORDER_REQUEST,
     POST_ORDER_SUCCESS,
     POST_ORDER_FAILED,
-    REMOVE_ORDER_DETAILS,  
+    REMOVE_ORDER_DETAILS,      
 } from "../actions/index";
 
 const initialState = {
@@ -20,7 +24,9 @@ const initialState = {
 
 const constructorState = {
     constructorItems: [],
-    hasBun: false,
+    idList: [], 
+    bun: [],
+    hasBun: false
 }
 
 const orderState = {
@@ -78,10 +84,41 @@ export const ingredientsReducer = (state = initialState, action) => {
 
 export const constructorReducer = (state = constructorState, action) => {
     switch (action.type) {
-        case GET_CONSTRUCTOR_ITEMS: {
+        case ADD_CONSTRUCTOR_ITEM: {
             return {
                 ...state,
-                constructorItems: action.constructorItems,
+                constructorItems: [...state.constructorItems, action.constructorItems],
+                idList: state.idList.some(item => item.id === action.idList) ? 
+                state.idList.map(item => item.id === action.idList ? {...item, qty: ++item.qty} : item) :
+                [...state.idList, {id : action.idList, qty : 1}]                                               
+            }
+        }
+        case ADD_CONSTRUCTOR_BUN: {
+            return {
+                ...state,
+                bun: action.bun,                
+                hasBun: action.bun.type === 'bun' ? true : state.hasBun,
+            }
+        }
+        case DELETE_CONSTRUCTOR_ITEM: {
+            return {
+                ...state,
+                constructorItems: state.constructorItems.filter((item, index)=> index !== action.index),
+                idList: state.idList.map(item => item.id === action.constructorItems._id ? {...item, qty: item.qty - 1} : item)
+            }
+        }
+        case SORT_CONSTRUCTOR: {
+            return{
+                ...state,
+                constructorItems: action.constructorItems
+            }
+        }
+        case RESET_CONSTRUCTOR: {
+            return {
+                constructorItems: [],
+                idList: [], 
+                bun: [],
+                hasBun: false
             }
         }
         default: {

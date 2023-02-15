@@ -1,12 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useRef } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Ingredient } from '../Ingredient/Ingredient';
 import burgerIngredientsStyle from './Burger-Ingredients.module.css';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
 import { useSelector, useDispatch } from 'react-redux';
+
 import { setCurrentItem, REMOVE_INGREDIENT_DETAILS } from '../../services/actions/index';
 
 
@@ -18,9 +17,9 @@ const BurgerIngredients =()=> {
     const [current, setCurrent] = React.useState('one');
     const [modalState, setModal] = React.useState({visible : false});
     
-    const handleOpenModal =(index)=> {
-        dispatch(setCurrentItem(ingredients, index));        
-        setModal({ visible: true });                       
+    const handleOpenModal =(item)=> {
+        dispatch(setCurrentItem(item));        
+        setModal({ visible: true });                             
     }
  
     const handleCloseModal =()=> {
@@ -28,15 +27,42 @@ const BurgerIngredients =()=> {
         dispatch({ type: REMOVE_INGREDIENT_DETAILS });        
     }
     
+
+    const containerPosition = useRef();
+    const bunPosition = useRef();
+    const saucePosition = useRef();
+    const mainPosition = useRef();
+
+    const handleScroll =()=> {        
+        const sauceSpace = containerPosition.current.getBoundingClientRect().top - saucePosition.current.getBoundingClientRect().top;
+        const mainSpace = containerPosition.current.getBoundingClientRect().top - mainPosition.current.getBoundingClientRect().top;
+        if(0 < sauceSpace && mainSpace < 0) {
+            setCurrent('two')
+        } else if (mainSpace > 0) {
+            setCurrent('three');
+        } else {
+            setCurrent('one');
+        }      
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll, true);
+        return () => {
+            window.removeEventListener('scroll', handleScroll, true);
+          };       
+    }, []);
+
     const modal = (
         <Modal onClose={handleCloseModal} > 
            <IngredientDetails />
         </Modal>
-    );
+    );   
+    
 
+    
     return(
         <section className={burgerIngredientsStyle.section}>                
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' }} >
                 <Tab value="one" active={current === 'one'} onClick={setCurrent}>
                 Булки
                 </Tab>
@@ -47,53 +73,29 @@ const BurgerIngredients =()=> {
                 Начинки
                 </Tab>
             </div>
-            <article className={burgerIngredientsStyle.container}>
-                <h3 className="text text_type_main-medium pt-10">Булки</h3>
+            <article className={burgerIngredientsStyle.container} ref={containerPosition}>
+                <h3 className="text text_type_main-medium pt-10" ref={bunPosition}>Булки</h3>
                 <ul className={burgerIngredientsStyle.list}>
                     {ingredients.map((item) => 
                         item.type === 'bun' && (
-                            <li className={burgerIngredientsStyle.item} key={item._id} onClick={()=> handleOpenModal(ingredients.indexOf(item))}>           
-                                <Counter count={1} size="default" extraClass="m-1" />
-                                <img className="pl-4 pr-4" src={item.image} alt={item.name}></img>
-                                <div className={burgerIngredientsStyle.price}>
-                                    <span className="text text_type_digits-default pr-2">{item.price}</span>
-                                    <CurrencyIcon type="primary" />
-                                </div>                        
-                                <p className="text text_type_main-default pt-2 mb-6">{item.name}</p>
-                            </li>                                                        
+                            <Ingredient ingredient={item} key={item._id} handleOpenModal={handleOpenModal}/>                                                 
                         )                                                                       
                     )} 
                                                       
                 </ul>
-                <h3 className="text text_type_main-medium pt-10">Соусы</h3>
+                <h3 className="text text_type_main-medium pt-10" ref={saucePosition}>Соусы</h3>
                 <ul className={burgerIngredientsStyle.list}>
                 {ingredients.map((item) => 
                         item.type === 'sauce' && (
-                            <li className={burgerIngredientsStyle.item} key={item._id} onClick={()=> handleOpenModal(ingredients.indexOf(item))}>            
-                                <Counter count={1} size="default" extraClass="m-1" />
-                                <img className="pl-4 pr-4" src={item.image} alt={item.name}></img>
-                                <div className={burgerIngredientsStyle.price}>
-                                    <span className="text text_type_digits-default pr-2">{item.price}</span>
-                                    <CurrencyIcon type="primary" />
-                                </div>                        
-                                <p className="text text_type_main-default pt-2 mb-6">{item.name}</p>
-                            </li>
+                            <Ingredient ingredient={item} key={item._id} handleOpenModal={handleOpenModal}/> 
                         )                        
                     )}                                     
                 </ul> 
-                <h3 className="text text_type_main-medium pt-10">Начинки</h3>
+                <h3 className="text text_type_main-medium pt-10" ref={mainPosition}>Начинки</h3>
                 <ul className={burgerIngredientsStyle.list}>
                 {ingredients.map((item) => 
                         item.type === 'main' && (
-                            <li className={burgerIngredientsStyle.item} key={item._id} onClick={()=> handleOpenModal(ingredients.indexOf(item))}>            
-                                <Counter count={1} size="default" extraClass="m-1" />
-                                <img className="pl-4 pr-4" src={item.image} alt={item.name}></img>
-                                <div className={burgerIngredientsStyle.price}>
-                                    <span className="text text_type_digits-default pr-2">{item.price}</span>
-                                    <CurrencyIcon type="primary" />
-                                </div>                        
-                                <p className="text text_type_main-default pt-2 mb-6">{item.name}</p>
-                            </li>
+                            <Ingredient ingredient={item} key={item._id} handleOpenModal={handleOpenModal}/> 
                         )                        
                     )}                                     
                 </ul>

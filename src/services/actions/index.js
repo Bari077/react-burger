@@ -1,10 +1,14 @@
 import { getIngredientsRequest, postOrder } from "../../utils/burger-api";
-import { createRandomIngredients } from "../../utils/utils";
+
 
 export const GET_INITIAL_ITEMS_REQUEST = 'GET_INITIAL_ITEMS_REQUEST';
 export const GET_INITIAL_ITEMS_SUCCESS = 'GET_INITIAL_ITEMS_SUCCESS';
 export const GET_INITIAL_ITEMS_FAILED = 'GET_INITIAL_ITEMS_FAILED';
-export const GET_CONSTRUCTOR_ITEMS = 'GET_CONSTRUCTOR_ITEMS';
+export const ADD_CONSTRUCTOR_ITEM = 'ADD_CONSTRUCTOR_ITEM';
+export const ADD_CONSTRUCTOR_BUN = 'ADD_CONSTRUCTOR_BUN';
+export const DELETE_CONSTRUCTOR_ITEM = 'DELETE_CONSTRUCTOR_ITEM';
+export const SORT_CONSTRUCTOR = 'SORT_CONSTRUCTOR';
+export const RESET_CONSTRUCTOR = 'RESET_CONSTRUCTOR';
 export const SET_INGREDIENT_DETAILS = 'SET_INGREDIENT_DETAILS';
 export const REMOVE_INGREDIENT_DETAILS = 'REMOVE_INGREDIENT_DETAILS';
 export const POST_ORDER_REQUEST = 'POST_ORDER_REQUEST';
@@ -32,29 +36,60 @@ export function getItems() {
     };
 }
 
-export function setCurrentItem(items, index) {
-    const currentItem = items[index];
+export const setCurrentItem =(item)=> ({    
+    type: SET_INGREDIENT_DETAILS,
+    ingredientDetails: item,
+})
+
+
+
+export const addItem =(item, itemId)=> {    
     return function(dispatch) {
-        dispatch({
-            type: SET_INGREDIENT_DETAILS,
-            ingredientDetails: currentItem,
-        })
+        dispatch(
+            item.ingredient.type === 'bun' ? {
+                type: ADD_CONSTRUCTOR_BUN,
+                bun: item.ingredient
+            } : 
+            {
+                type: ADD_CONSTRUCTOR_ITEM,
+                constructorItems: item.ingredient,
+                idList: itemId                
+            }
+        )
     }
 }
 
-export function getConstructorItems(items) {    
+export const deleteItem=(item, index)=> {
     return function(dispatch) {
         dispatch({
-            type: GET_CONSTRUCTOR_ITEMS,
-            constructorItems: items,
-        });        
+            type: DELETE_CONSTRUCTOR_ITEM,
+            constructorItems: item,
+            index: index
+        }
+            
+        )
     }
 }
 
-export function sendOrder(constructorItems) {
-    const idList = constructorItems.map((i) => i._id)
+
+ export const sortConstructor =(items, dragIndex, hoverIndex)=> {
+    const dragItem = items[dragIndex];
+    items.splice(dragIndex, 1);
+    items.splice(hoverIndex, 0, dragItem);
+    return ({
+        type: SORT_CONSTRUCTOR,
+        constructorItems: [...items]
+    })
+ }   
+
+
+
+export function sendOrder(orderList) {
+
+    const orderListId = orderList.map((i) => i._id)   
+    
     const order = {
-        "ingredients" : idList    
+        "ingredients" : orderListId    
     }    
     return function(dispatch) {
         dispatch({
@@ -65,7 +100,7 @@ export function sendOrder(constructorItems) {
             dispatch({
                 type: POST_ORDER_SUCCESS,
                 orderDetails: data,
-            });            
+            });          
         })
         .catch(err => {
             dispatch({

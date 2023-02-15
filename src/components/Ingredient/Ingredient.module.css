@@ -1,0 +1,13 @@
+.item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    cursor: pointer;
+}
+
+.price {
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+}

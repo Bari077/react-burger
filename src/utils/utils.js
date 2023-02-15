@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 
+
+
+
 export const ingredientsPropTypes = PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,

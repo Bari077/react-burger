@@ -1,46 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
-import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorCard } from '../Constructor-Card/Constructor-Card';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { useSelector, useDispatch } from 'react-redux';
-import { getConstructorItems, sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/index';
+import { sendOrder, REMOVE_ORDER_DETAILS, RESET_CONSTRUCTOR, addItem } from '../../services/actions/index';
+import { useDrop } from 'react-dnd';
 
 
 
 
-const BurgerConstructor =()=> { 
-    const ingredients = useSelector(store => store.ingredientsReducer.items);
+
+const BurgerConstructor =()=> {     
     
-    const [modalState, setModal] = React.useState({visible : false});
-    const [total, setTotal] = React.useState(0);   
+    const [modalState, setModal] = useState({visible : false});
+    const [total, setTotal] = useState(0);
 
     const dispatch = useDispatch();
     const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
+    const bun = useSelector(state=> state.constructorReducer.bun);
     const hasBun = useSelector(state=> state.constructorReducer.hasBun);
     const orderRequest = useSelector(state=> state.orderReducer.orderRequest);
     const orderFailed = useSelector(state=> state.orderReducer.orderFailed);
 
+      
 
+    const [{ isHover }, dropTarget] = useDrop({
+        accept: 'ingredient',
+        collect: monitor => ({            
+            isHover: monitor.getItemType() !==bun ? monitor.isOver() : null,
+        }),
+        drop(item) {
+            dispatch(addItem(item, item.ingredient._id))                        
+        }                             
+    })
     
-    React.useEffect(() => {
-        dispatch(getConstructorItems(ingredients));             
-    }, []);
-
-   
-    const calcSum =()=> {
-        const summary = constructorIngredients.reduce((sum, item) => sum + item.price, constructorIngredients[0].price);
-        setTotal(summary)
+     
+  
+    const calcSum =()=> {        
+        const bunSum = bun.length !== 0 ? bun.price * 2 : 0
+        const summary = constructorIngredients.reduce((sum, item) => sum + item.price, bunSum);        
+        setTotal(summary)        
     }
 
     React.useEffect(()=> {        
-        if(constructorIngredients.length !== 0) {
+        if(constructorIngredients.length !== 0 || bun.length !== 0) {
             calcSum();
         }        
-    }, [constructorIngredients]);
+    }, [constructorIngredients, bun]);
 
     const handleOpenModal =()=> {       
         setModal({ visible: true });
@@ -52,9 +62,16 @@ const BurgerConstructor =()=> {
     }
 
     const confirmOrder =()=> {
-        dispatch(sendOrder(constructorIngredients));
-        if(!orderRequest && !orderFailed) {
-            handleOpenModal()
+        const list =[];
+        list.push(bun);        
+        const orderList = list.concat(constructorIngredients);
+        orderList.push(bun); 
+
+        dispatch(sendOrder(orderList));
+        if(!orderRequest || !orderFailed) {
+            handleOpenModal();
+            dispatch({type: RESET_CONSTRUCTOR});
+            setTotal(0)
         }
     }
    
@@ -63,54 +80,50 @@ const BurgerConstructor =()=> {
             <OrderDetails />           
         </Modal>
     );    
+      
+    const listClass = `${burgerStyle.list} ${isHover ? burgerStyle.onHover : ''}`
 
     return(
 
         <section className={burgerStyle.section}>
-            <div className={burgerStyle.container}>
+            <div className={burgerStyle.container} ref={dropTarget}>
                 <div className="pl-8 pb-4">
-                    {hasBun &&                    
-                    <ConstructorElement
-                    type="top"
-                    isLocked={true}
-                    text={constructorIngredients[0].name + ' (верх)'}
-                    price={constructorIngredients[0].price}
-                    thumbnail={constructorIngredients[0].image}
-                    key={constructorIngredients[0]._id}
-                    />}                                        
+                    {hasBun && bun.length !== 0 ? 
+                    (
+                        <ConstructorElement
+                        type="top"
+                        isLocked={true}
+                        text={bun.name + ' (верх)'}
+                        price={bun.price}
+                        thumbnail={bun.image}
+                        key={bun._id}
+                        />
+                    )  :  <p className="text text_type_main-medium pl-6 pt-10">Перенесите булку для бургера сюда</p>                  
+                    }                                        
                 </div>
-                <ul className={burgerStyle.list}>
-                    {constructorIngredients.length && constructorIngredients.map((item, index)=> 
+                <ul className={`${listClass}`}>
+                    {hasBun && constructorIngredients.length === 0 && !isHover ? <p className="text text_type_main-medium pl-8 pt-30">Перенесите желаемые ингредиенты сюда</p>  : constructorIngredients.map((item, index)=> 
                     item.type !== 'bun' &&
                     (
-                    <li className={burgerStyle.item} key={index}>
-                        <DragIcon type="primary" />                    
-                        <ConstructorElement 
-                            type= "default"
-                            isLocked={false}
-                            text={item.name}
-                            price={item.price}
-                            thumbnail={item.image}                            
-                        />
-                    </li>                
+                    <ConstructorCard item={item} index={index} key={index}/>                
                     ))}
                 </ul>                
                 <div className="pt-4 pl-8">
-                        {hasBun && 
+                        {hasBun && bun.length !== 0 && 
                         <ConstructorElement
                         type="bottom"
                         isLocked={true}
-                        text={constructorIngredients[0].name + ' (низ)'}
-                        price={constructorIngredients[0].price}
-                        thumbnail={constructorIngredients[0].image}
-                        key={constructorIngredients._id}
+                        text={bun.name + ' (низ)'}
+                        price={bun.price}
+                        thumbnail={bun.image}
+                        key={bun._id}
                         />}                 
                 </div>
             </div>
             <div className={burgerStyle.total}>
                 <p className="text text_type_digits-medium pr-3">{total}</p>
                 <div className={burgerStyle.order} > <CurrencyIcon type="primary" /></div>                
-                <Button htmlType="button" type="primary" size="large" onClick={confirmOrder}>
+                <Button htmlType="button" type="primary" size="large" onClick={confirmOrder} disabled = {!hasBun || constructorIngredients.length === 0} >
                     Оформить заказ
                 </Button>
             </div>            
