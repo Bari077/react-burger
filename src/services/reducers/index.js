@@ -18,14 +18,16 @@ import {
 const initialState = {
     items: [],
     itemsRequest: false,
-    itemsFailed: false,    
-    ingredientDetails: {},
+    itemsFailed: false, 
+}
+
+const ingredientModalState = {
+    ingredientDetails: null,
 }
 
 const constructorState = {
-    constructorItems: [],
-    idList: [], 
-    bun: [],
+    constructorItems: [], 
+    bun: null,
     hasBun: false
 }
 
@@ -63,7 +65,15 @@ export const ingredientsReducer = (state = initialState, action) => {
                 itemsRequest: false,
                 itemsFailed: true,
             };
+        }        
+        default: {
+            return state;
         }
+    }
+};
+
+export const ingredientModalReducer = (state= ingredientModalState, action)=> {
+    switch (action.type) {
         case SET_INGREDIENT_DETAILS: {
             return {
                ...state,
@@ -73,24 +83,21 @@ export const ingredientsReducer = (state = initialState, action) => {
         case REMOVE_INGREDIENT_DETAILS: {
             return {
                 ...state,
-                ingredientDetails: {}
+                ingredientDetails: null,
             }
         }
         default: {
             return state;
         }
-    }
-};
+    }    
+}
 
 export const constructorReducer = (state = constructorState, action) => {
     switch (action.type) {
         case ADD_CONSTRUCTOR_ITEM: {
             return {
                 ...state,
-                constructorItems: [...state.constructorItems, action.constructorItems],
-                idList: state.idList.some(item => item.id === action.idList) ? 
-                state.idList.map(item => item.id === action.idList ? {...item, qty: ++item.qty} : item) :
-                [...state.idList, {id : action.idList, qty : 1}]                                               
+                constructorItems: [...state.constructorItems, action.constructorItems],                                             
             }
         }
         case ADD_CONSTRUCTOR_BUN: {
@@ -104,7 +111,6 @@ export const constructorReducer = (state = constructorState, action) => {
             return {
                 ...state,
                 constructorItems: state.constructorItems.filter((item, index)=> index !== action.index),
-                idList: state.idList.map(item => item.id === action.constructorItems._id ? {...item, qty: item.qty - 1} : item)
             }
         }
         case SORT_CONSTRUCTOR: {
@@ -115,9 +121,8 @@ export const constructorReducer = (state = constructorState, action) => {
         }
         case RESET_CONSTRUCTOR: {
             return {
-                constructorItems: [],
-                idList: [], 
-                bun: [],
+                constructorItems: [], 
+                bun: null,
                 hasBun: false
             }
         }

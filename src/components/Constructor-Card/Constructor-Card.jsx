@@ -4,6 +4,7 @@ import { deleteItem, sortConstructor } from '../../services/actions/index';
 import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
+import PropTypes from 'prop-types';
 
 export const ConstructorCard =({item, index})=> {
     const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
@@ -11,6 +12,7 @@ export const ConstructorCard =({item, index})=> {
     const dispatch = useDispatch();
     const handleDeleteIngredient =(item, index)=> {
         dispatch(deleteItem(item, index))
+        console.log(item, index)
     }
     
     const ref = useRef(null);
@@ -62,4 +64,22 @@ export const ConstructorCard =({item, index})=> {
                         />
                     </li>                
     )
+}
+
+ConstructorCard.propTypes = {
+    index : PropTypes.number.isRequired,
+    intem : PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        proteins: PropTypes.number,
+        fat: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        calories: PropTypes.number,
+        price: PropTypes.number,
+        image: PropTypes.string,
+        image_mobile: PropTypes.string,
+        image_large: PropTypes.string,
+        __v: PropTypes.number, 
+    }).isRequired
 }

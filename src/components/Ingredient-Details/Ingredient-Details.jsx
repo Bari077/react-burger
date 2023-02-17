@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
 import ingrdientModalStyle from './Ingredient-Details.module.css';
 import { useSelector } from 'react-redux';
 
 const IngredientDetails =()=> {
-    const currentIngredient = useSelector(state => state.ingredientsReducer.ingredientDetails);
+    const currentIngredient = useSelector(state => state.ingredientModalReducer.ingredientDetails);
     return(
         <>
             <p className="text text_type_main-large pt-10 pl-10 pr-10">Детали ингредиента</p>

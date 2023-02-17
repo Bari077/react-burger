@@ -43,33 +43,23 @@ export const setCurrentItem =(item)=> ({
 
 
 
-export const addItem =(item, itemId)=> {    
-    return function(dispatch) {
-        dispatch(
-            item.ingredient.type === 'bun' ? {
-                type: ADD_CONSTRUCTOR_BUN,
-                bun: item.ingredient
-            } : 
-            {
-                type: ADD_CONSTRUCTOR_ITEM,
-                constructorItems: item.ingredient,
-                idList: itemId                
-            }
-        )
+export const addItem =(item, itemId)=> (    
+    item.ingredient.type === 'bun' ? {
+        type: ADD_CONSTRUCTOR_BUN,
+        bun: item.ingredient
+    } : 
+    {
+        type: ADD_CONSTRUCTOR_ITEM,
+        constructorItems: item.ingredient,
+        idList: itemId                
     }
-}
+)
 
-export const deleteItem=(item, index)=> {
-    return function(dispatch) {
-        dispatch({
-            type: DELETE_CONSTRUCTOR_ITEM,
-            constructorItems: item,
-            index: index
-        }
-            
-        )
-    }
-}
+export const deleteItem=(item, index)=> ({
+    type: DELETE_CONSTRUCTOR_ITEM,
+    constructorItems: item,
+    index: index
+})
 
 
  export const sortConstructor =(items, dragIndex, hoverIndex)=> {
@@ -84,12 +74,10 @@ export const deleteItem=(item, index)=> {
 
 
 
-export function sendOrder(orderList) {
-
-    const orderListId = orderList.map((i) => i._id)   
+export function sendOrder(orderList) {     
     
     const order = {
-        "ingredients" : orderListId    
+        "ingredients" : orderList    
     }    
     return function(dispatch) {
         dispatch({

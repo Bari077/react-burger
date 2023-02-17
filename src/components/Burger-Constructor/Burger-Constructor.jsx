@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorCard } from '../Constructor-Card/Constructor-Card';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -16,9 +16,7 @@ import { useDrop } from 'react-dnd';
 
 const BurgerConstructor =()=> {     
     
-    const [modalState, setModal] = useState({visible : false});
-    const [total, setTotal] = useState(0);
-
+    const [isShowModal, setIsShowModal] = useState(false);
     const dispatch = useDispatch();
     const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
     const bun = useSelector(state=> state.constructorReducer.bun);
@@ -38,40 +36,26 @@ const BurgerConstructor =()=> {
         }                             
     })
     
-     
-  
-    const calcSum =()=> {        
-        const bunSum = bun.length !== 0 ? bun.price * 2 : 0
-        const summary = constructorIngredients.reduce((sum, item) => sum + item.price, bunSum);        
-        setTotal(summary)        
-    }
-
-    React.useEffect(()=> {        
-        if(constructorIngredients.length !== 0 || bun.length !== 0) {
-            calcSum();
-        }        
-    }, [constructorIngredients, bun]);
+    const totalPrice = useMemo(() => {
+        const bunCost = bun? bun.price *2 : 0;
+        return constructorIngredients.reduce((sum, item) => sum + item.price, bunCost)
+    }, [bun, constructorIngredients])  
 
     const handleOpenModal =()=> {       
-        setModal({ visible: true });
+        setIsShowModal({ visible: true });
     }
  
     const handleCloseModal =()=> {
-        setModal({ visible: false });
+        setIsShowModal({ visible: false });
         dispatch({ type: REMOVE_ORDER_DETAILS });
     }
 
-    const confirmOrder =()=> {
-        const list =[];
-        list.push(bun);        
-        const orderList = list.concat(constructorIngredients);
-        orderList.push(bun); 
-
+    const confirmOrder =()=> {        
+        const orderList = [bun._id, ...constructorIngredients.map(ingredient => ingredient._id), bun._id] 
         dispatch(sendOrder(orderList));
         if(!orderRequest || !orderFailed) {
             handleOpenModal();
-            dispatch({type: RESET_CONSTRUCTOR});
-            setTotal(0)
+            dispatch({type: RESET_CONSTRUCTOR});                        
         }
     }
    
@@ -121,13 +105,13 @@ const BurgerConstructor =()=> {
                 </div>
             </div>
             <div className={burgerStyle.total}>
-                <p className="text text_type_digits-medium pr-3">{total}</p>
+                <p className="text text_type_digits-medium pr-3">{totalPrice}</p>
                 <div className={burgerStyle.order} > <CurrencyIcon type="primary" /></div>                
                 <Button htmlType="button" type="primary" size="large" onClick={confirmOrder} disabled = {!hasBun || constructorIngredients.length === 0} >
                     Оформить заказ
                 </Button>
             </div>            
-            {modalState.visible && modal}        
+            {isShowModal.visible && modal}        
         </section>
     )
 }

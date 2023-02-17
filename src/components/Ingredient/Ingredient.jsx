@@ -1,8 +1,11 @@
+import { useMemo } from "react";
+import PropTypes from 'prop-types';
 import { useDrag } from "react-dnd";
 import { useSelector} from 'react-redux';
 import ingredientStyle from './Ingredient.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+
 
 
 export const Ingredient =({ingredient, handleOpenModal})=> {    
@@ -14,28 +17,20 @@ export const Ingredient =({ingredient, handleOpenModal})=> {
           })
     })
     
-    const idList = useSelector(state=> state.constructorReducer.idList);
+    const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
     const bun = useSelector(state=> state.constructorReducer.bun);
     
-    
-    const countIngredients = () => {
-        if(ingredient.type !== 'bun') {
-            const mapId = idList.reduce((id, qty) =>{
-                id[qty.id] = qty
-                return id
-            }, {});
-            const idCount = mapId[ingredient._id]       
-            return idList.some(item=> item.id === ingredient._id) ? idCount.qty  : 0 
-        } else {
-            return bun.length !== 0 ? (bun._id === ingredient._id ? 2 : 0) : 0
-        }
+    const count = useMemo(() => {
+        return ingredient.type === 'bun'? bun && bun._id === ingredient._id ?  2 : 0 :
         
-    } 
+        constructorIngredients.filter(item => item._id === ingredient._id).length;
+      }, [ingredient, bun, constructorIngredients])
+
     
 
     return (
         <li className={ingredientStyle.item} onClick={()=> handleOpenModal(ingredient)} style={{opacity}}>           
-                                <Counter count={countIngredients()} size="default" extraClass="m-1" />
+                                <Counter count={count} size="default" extraClass="m-1" />
                                 <img className="pl-4 pr-4" src={ingredient.image} alt={ingredient.name} ref={dragRef}></img>
                                 <div className={ingredientStyle.price}>
                                     <span className="text text_type_digits-default pr-2">{ingredient.price}</span>
@@ -44,4 +39,22 @@ export const Ingredient =({ingredient, handleOpenModal})=> {
                                 <p className="text text_type_main-default pt-2 mb-6">{ingredient.name}</p>
                             </li>       
     )
+}
+
+Ingredient.propTypes = {
+    handleOpenModal : PropTypes.func.isRequired,
+    ingredient : PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        proteins: PropTypes.number,
+        fat: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        calories: PropTypes.number,
+        price: PropTypes.number,
+        image: PropTypes.string,
+        image_mobile: PropTypes.string,
+        image_large: PropTypes.string,
+        __v: PropTypes.number, 
+    }).isRequired
 }

@@ -15,15 +15,15 @@ const BurgerIngredients =()=> {
     const ingredients = useSelector(state => state.ingredientsReducer.items);
     const dispatch = useDispatch();     
     const [current, setCurrent] = React.useState('one');
-    const [modalState, setModal] = React.useState({visible : false});
+    const [isShowModal, setIsShowModal] = React.useState(false);
     
     const handleOpenModal =(item)=> {
         dispatch(setCurrentItem(item));        
-        setModal({ visible: true });                             
+        setIsShowModal({ visible: true });                             
     }
  
     const handleCloseModal =()=> {
-        setModal({ visible: false });
+        setIsShowModal({ visible: false });
         dispatch({ type: REMOVE_INGREDIENT_DETAILS });        
     }
     
@@ -100,7 +100,7 @@ const BurgerIngredients =()=> {
                     )}                                     
                 </ul>
             </article>
-            {modalState.visible && modal}                                                                             
+            {isShowModal.visible && modal}                                                                             
         </section>
     )
 }
