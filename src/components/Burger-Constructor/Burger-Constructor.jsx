@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorCard } from '../Constructor-Card/Constructor-Card';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,7 +7,8 @@ import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { useSelector, useDispatch } from 'react-redux';
-import { sendOrder, REMOVE_ORDER_DETAILS, RESET_CONSTRUCTOR, addItem } from '../../services/actions/index';
+import { sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/order';
+import { RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
 import { useDrop } from 'react-dnd';
 
 

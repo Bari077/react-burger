@@ -36,5 +36,6 @@
 
 .link {
     display: flex;
+    color: white;
     text-decoration: none;
 }

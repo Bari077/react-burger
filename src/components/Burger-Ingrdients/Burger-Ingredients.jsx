@@ -5,9 +5,7 @@ import burgerIngredientsStyle from './Burger-Ingredients.module.css';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { setCurrentItem, REMOVE_INGREDIENT_DETAILS } from '../../services/actions/index';
-
+import { setCurrentItem, REMOVE_INGREDIENT_DETAILS  } from '../../services/actions/ingredient-modal';
 
 
 
