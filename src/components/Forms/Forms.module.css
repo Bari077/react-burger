@@ -1,0 +1,20 @@
+.form {
+    width: 480px;
+    margin: 0 auto;
+    padding-top: 140px;
+    padding-bottom: 140px;
+    text-align: center;    
+}
+
+.additional {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-bottom: 16px;
+}
+
+.additionalButton {
+    padding-left: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
