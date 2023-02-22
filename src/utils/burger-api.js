@@ -7,9 +7,9 @@ export default function checkResponse(response) {
     return Promise.reject(`Что-то пошло не так: ${response.status}`);    
 };
 
-export const getIngredients = ()=> {
+export function getIngredientsRequest() {
     return fetch(`${url}ingredients`)
-      .then(response=> checkResponse(response))           
+      .then(checkResponse)           
   };
 
 export const postOrder =(order)=> {
@@ -19,5 +19,5 @@ export const postOrder =(order)=> {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(order)
-    }).then(response => checkResponse(response))
+    }).then(checkResponse)
 }
