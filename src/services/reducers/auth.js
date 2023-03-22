@@ -148,6 +148,7 @@ export const authReducer = (state = authState, action) => {
         case GET_USER_FAILED: {
             return {
                 ...state,
+                user: null
             };
         }
         

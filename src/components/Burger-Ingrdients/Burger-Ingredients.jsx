@@ -30,8 +30,7 @@ const BurgerIngredients =()=> {
         window.history.replaceState(null, "", `ingredients/${item._id}`);
         setIsShowModal({ visible: true });
         sessionStorage.setItem('currentIngredient', JSON.stringify(item));
-        dispatch(setCurrentItem(item));        
-        console.log(JSON.parse(sessionStorage.getItem('currentIngredient')))                             
+        dispatch(setCurrentItem(item));                                     
     }
  
     const handleCloseModal =()=> {

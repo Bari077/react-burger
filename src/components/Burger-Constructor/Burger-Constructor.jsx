@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorCard } from '../Constructor-Card/Constructor-Card';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -8,10 +8,9 @@ import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/order';
-import { RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
+import { ADD_CONSTRUCTOR_ITEM, ADD_CONSTRUCTOR_BUN, RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
 import { useDrop } from 'react-dnd';
-
-
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 
@@ -19,13 +18,24 @@ const BurgerConstructor =()=> {
     
     const [isShowModal, setIsShowModal] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
     const bun = useSelector(state=> state.constructorReducer.bun);
-    const hasBun = useSelector(state=> state.constructorReducer.hasBun);
     const orderRequest = useSelector(state=> state.orderReducer.orderRequest);
     const orderFailed = useSelector(state=> state.orderReducer.orderFailed);
-
-      
+    const userInfo = useSelector(state=> state.authReducer.user);
+ 
+    
+    useMemo(()=> {
+        if(bun) {
+            localStorage.setItem('bun', JSON.stringify(bun));
+        }        
+        if(constructorIngredients.length) {
+            localStorage.setItem('constructorIngredients', JSON.stringify(constructorIngredients))
+        } else {
+            localStorage.removeItem('constructorIngredients')
+        }
+    },[bun, constructorIngredients])
 
     const [{ isHover }, dropTarget] = useDrop({
         accept: 'ingredient',
@@ -33,7 +43,7 @@ const BurgerConstructor =()=> {
             isHover: monitor.getItemType() !==bun ? monitor.isOver() : null,
         }),
         drop(item) {
-            dispatch(addItem(item, item.ingredient._id))                        
+            dispatch(addItem(item, item.ingredient._id));                                    
         }                             
     })
     
@@ -51,13 +61,19 @@ const BurgerConstructor =()=> {
         dispatch({ type: REMOVE_ORDER_DETAILS });
     }
 
-    const confirmOrder =()=> {        
-        const orderList = [bun._id, ...constructorIngredients.map(ingredient => ingredient._id), bun._id] 
-        dispatch(sendOrder(orderList));
-        if(!orderRequest || !orderFailed) {
+    const confirmOrder =()=> {
+        if(!userInfo) {            
+            navigate('login', {state: {from: '/'}})
+        } else {
+            const orderList = [bun._id, ...constructorIngredients.map(ingredient => ingredient._id), bun._id] 
+            dispatch(sendOrder(orderList));
+            if(!orderRequest || !orderFailed) {
             handleOpenModal();
-            dispatch({type: RESET_CONSTRUCTOR});                        
+            dispatch({type: RESET_CONSTRUCTOR});
+            localStorage.removeItem('constructorIngredients');
+            localStorage.removeItem('bun');                        
         }
+        }       
     }
    
     const modal = (
@@ -73,7 +89,7 @@ const BurgerConstructor =()=> {
         <section className={burgerStyle.section}>
             <div className={burgerStyle.container} ref={dropTarget}>
                 <div className="pl-8 pb-4">
-                    {hasBun && bun.length !== 0 ? 
+                    {bun && bun.length !== 0 ? 
                     (
                         <ConstructorElement
                         type="top"
@@ -87,14 +103,14 @@ const BurgerConstructor =()=> {
                     }                                        
                 </div>
                 <ul className={`${listClass}`}>
-                    {hasBun && constructorIngredients.length === 0 && !isHover ? <p className="text text_type_main-medium pl-8 pt-30">Перенесите желаемые ингредиенты сюда</p>  : constructorIngredients.map((item, index)=> 
+                    {bun && constructorIngredients.length === 0 && !isHover ? <p className="text text_type_main-medium pl-8 pt-30">Перенесите желаемые ингредиенты сюда</p>  : constructorIngredients.map((item, index)=> 
                     item.type !== 'bun' &&
                     (
                     <ConstructorCard item={item} index={index} key={index}/>                
                     ))}
                 </ul>                
                 <div className="pt-4 pl-8">
-                        {hasBun && bun.length !== 0 && 
+                        {bun && bun.length !== 0 && 
                         <ConstructorElement
                         type="bottom"
                         isLocked={true}
@@ -108,7 +124,7 @@ const BurgerConstructor =()=> {
             <div className={burgerStyle.total}>
                 <p className="text text_type_digits-medium pr-3">{totalPrice}</p>
                 <div className={burgerStyle.order} > <CurrencyIcon type="primary" /></div>                
-                <Button htmlType="button" type="primary" size="large" onClick={confirmOrder} disabled = {!hasBun || constructorIngredients.length === 0} >
+                <Button htmlType="button" type="primary" size="large" onClick={confirmOrder} disabled = {!bun || constructorIngredients.length === 0} >
                     Оформить заказ
                 </Button>
             </div>            

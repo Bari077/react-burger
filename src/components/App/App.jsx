@@ -16,10 +16,6 @@ import { useEffect } from 'react';
 
 
 const App =()=> {
-  /*const dispatch = useDispatch();
-  useEffect(()=> {
-    dispatch(getUserInfo())
-  },[])*/
 
   return (
                 

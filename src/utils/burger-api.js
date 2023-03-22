@@ -6,11 +6,12 @@ export function getIngredientsRequest() {
       .then(checkResponse)           
   };
 
-export const postOrder =(order)=> {
+export const postOrder =(order, accessToken)=> {
     return fetch(`${url}orders`, {
         method: 'POST',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            authorization : accessToken
         },
         body: JSON.stringify(order)
     }).then(checkResponse)

@@ -19,7 +19,7 @@ export function LoginPage() {
         return (
             <Navigate to="/" replace />
         );
-    }
+    } 
 
     return (
         

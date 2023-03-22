@@ -65,8 +65,7 @@ export function signIn(form) {
         .then((res) => {
             if(res.success) {
                 setCookie('accessToken', res.accessToken);
-                localStorage.setItem('refreshToken', res.refreshToken);
-                localStorage.setItem('auth', true);          
+                localStorage.setItem('refreshToken', res.refreshToken);          
                 dispatch({
                     type: LOGIN_USER_SUCCESS,
                     user: res.user,
@@ -97,7 +96,6 @@ export function signOut(refreshToken) {
                     type: LOGOUT_SUCCESS,
                 });
                 localStorage.removeItem('refreshToken');
-                localStorage.removeItem('auth');
                 setCookie('accessToken', "", {'max-age' : -1});        
             }           
         })
