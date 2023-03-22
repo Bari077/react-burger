@@ -1,11 +1,5 @@
-const url = 'https://norma.nomoreparties.space/api/';
-
-export default function checkResponse(response) {
-    if(response.ok) {
-        return response.json()
-    }
-    return Promise.reject(`Что-то пошло не так: ${response.status}`);    
-};
+import { url } from "./utils";
+import checkResponse from "./utils";
 
 export function getIngredientsRequest() {
     return fetch(`${url}ingredients`)
@@ -21,3 +15,4 @@ export const postOrder =(order)=> {
         body: JSON.stringify(order)
     }).then(checkResponse)
 }
+

@@ -31,14 +31,14 @@ export const Ingredient =({ingredient, handleOpenModal})=> {
 
     return (
         <li className={ingredientStyle.item} onClick={()=> handleOpenModal(ingredient)} style={{opacity}}>           
-                                <Counter count={count} size="default" extraClass="m-1" />
-                                <img className="pl-4 pr-4" src={ingredient.image} alt={ingredient.name} ref={dragRef}></img>
-                                <div className={ingredientStyle.price}>
-                                    <span className="text text_type_digits-default pr-2">{ingredient.price}</span>
-                                    <CurrencyIcon type="primary" />
-                                </div>                        
-                                <p className="text text_type_main-default pt-2 mb-6">{ingredient.name}</p>
-                            </li>       
+            <Counter count={count} size="default" extraClass="m-1" />
+            <img className="pl-4 pr-4" src={ingredient.image} alt={ingredient.name} ref={dragRef}></img>
+            <div className={ingredientStyle.price}>
+                <span className="text text_type_digits-default pr-2">{ingredient.price}</span>
+                <CurrencyIcon type="primary" />
+            </div>                        
+            <p className="text text_type_main-default pt-2 mb-6">{ingredient.name}</p>
+        </li>       
     )
 }
 
