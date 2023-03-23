@@ -8,9 +8,9 @@ import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/order';
-import { ADD_CONSTRUCTOR_ITEM, ADD_CONSTRUCTOR_BUN, RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
+import { RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
 import { useDrop } from 'react-dnd';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -68,10 +68,7 @@ const BurgerConstructor =()=> {
             const orderList = [bun._id, ...constructorIngredients.map(ingredient => ingredient._id), bun._id] 
             dispatch(sendOrder(orderList));
             if(!orderRequest || !orderFailed) {
-            handleOpenModal();
-            dispatch({type: RESET_CONSTRUCTOR});
-            localStorage.removeItem('constructorIngredients');
-            localStorage.removeItem('bun');                        
+            handleOpenModal();                                   
         }
         }       
     }

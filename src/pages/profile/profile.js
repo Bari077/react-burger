@@ -1,5 +1,5 @@
+import { Outlet } from 'react-router-dom';
 import AppHeader from '../../components/App-Header/App-Header';
-import { ProfileForm } from '../../components/Forms/Profile-Form';
 import { ProfileMenu } from '../../components/Profile-Menu/Profile-Menu';
 
 
@@ -12,7 +12,7 @@ export function ProfilePage() {
             <AppHeader />
             <main className="main">
                 <ProfileMenu />
-                <ProfileForm />
+                <Outlet />                
             </main>            
         </div>
     )

@@ -7,11 +7,12 @@ import { ResetPasswordPage } from '../../pages/reset-password/reset-password';
 import { ProfilePage } from '../../pages/profile/profile';
 import { ProtectedRouteElement } from '../Protected-Route/Protected-Route';
 import { IngredientPage } from '../../pages/ingredient/ingredient';
-import { OrdersPage } from '../../pages/profile/orders';
 import { Preloader } from '../Preloader/Preloader';
 import { getUserInfo } from '../../services/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { ProfileForm } from '../Forms/Profile-Form';
+import { OrderList } from '../Order-List/Order-List';
 
 
 
@@ -35,8 +36,10 @@ const App =()=> {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />}/>} />
-          <Route path="/profile/orders" element={<ProtectedRouteElement element={<OrdersPage />}/>} />
+          <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />}/>}>
+            <Route path="" element={<ProfileForm />} />
+            <Route path="orders" element={<OrderList />} />
+          </Route>          
           <Route path="/ingredients/:id" element={<IngredientPage />} />
         </Routes>
       </Router>)}
