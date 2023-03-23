@@ -1,9 +1,9 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useRef } from "react";
+import { useDispatch } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { resetPassword, RESET_REQUEST_STATUS } from '../../services/actions/auth';
+import { resetPassword } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 
 export const ResetPasswordForm =()=> {
@@ -23,9 +23,7 @@ export const ResetPasswordForm =()=> {
         "token": mailKeyValue, 
     }; 
 
-    const navigate = useNavigate();
-    const success = useSelector(state=> state.authReducer.success);
-    const error =  useSelector(state=> state.authReducer.error) 
+    const navigate = useNavigate();     
     const dispatch = useDispatch();
 
     const note = (<Notification onClose={()=> setIsShowNote({visible: false})}>Пароль успешно изменен </Notification>);
@@ -34,23 +32,21 @@ export const ResetPasswordForm =()=> {
 
     const handleSubmit =(evt)=> { 
         evt.preventDefault();       
-        dispatch(resetPassword(form));                                                                   
+        dispatch(resetPassword(form, {onSuccess: ()=> handleSuccess(), onError: () => handleError()}));                                                                   
     }
 
-    const handleSuccess = useCallback(()=> {
+    const handleSuccess = ()=> {
         setIsShowNote({visible: true});
-        dispatch({type : RESET_REQUEST_STATUS});
         setTimeout(()=> setIsShowNote({visible: false}), 3000);
         setTimeout(()=> navigate('/login', {state:{from: '/reset-password'}}), 3000)
-    }, [dispatch, navigate]) 
+    }
     
-    const handleError = useCallback(()=> {
+    const handleError = ()=> {
         setIsShowError({visible: true});
-        dispatch({type : RESET_REQUEST_STATUS});
         setTimeout(()=> setIsShowError({visible: false}), 3000);
-    }, [dispatch]) 
+    } 
 
-
+/*
     useEffect(()=> {
         error && handleError();
     }, [error, handleError])
@@ -58,7 +54,7 @@ export const ResetPasswordForm =()=> {
 
     useEffect(()=> {
         success && handleSuccess();
-    }, [success, handleSuccess])
+    }, [success, handleSuccess])*/
 
     return (
         <form onSubmit={handleSubmit} className={formStyle.form}>

@@ -1,9 +1,9 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { forgotPassword, RESET_REQUEST_STATUS } from '../../services/actions/auth';
-import { useSelector, useDispatch } from 'react-redux';
+import { forgotPassword } from '../../services/actions/auth';
+import { useDispatch } from 'react-redux';
 
 
 export const ForgotPasswordForm =()=> {    
@@ -11,22 +11,16 @@ export const ForgotPasswordForm =()=> {
     const [value, setValue] = useState('');
     const inputRef = useRef(null);
 
-    const navigate = useNavigate();
-    const success = useSelector(state=> state.authReducer.success); 
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     
     const mail = { "email": value }; 
 
     const handleSubmit =(evt)=> { 
         evt.preventDefault();       
-        dispatch(forgotPassword(mail));                                                                   
+        dispatch(forgotPassword(mail, navigate('/reset-password', {state:{from: '/forgot-password'}})));                                                                   
     }
     
-
-    useEffect(()=> {
-        success && navigate('/reset-password', {state:{from: '/forgot-password'}});
-        dispatch({type : RESET_REQUEST_STATUS});
-    }, [success, navigate])
 
     return (
         <form onSubmit={handleSubmit} className={formStyle.form}>

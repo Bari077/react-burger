@@ -1,5 +1,5 @@
-import { url } from "./utils";
-import checkResponse from "./utils";
+import { url } from "../utils";
+import checkResponse from "../utils";
 
 export const registerUserRequest = async (form)=> {    
     return await fetch(`${url}auth/register`, {

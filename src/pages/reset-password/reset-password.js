@@ -1,18 +1,12 @@
-import AppHeader from '../components/App-Header/App-Header';
-import { ResetPasswordForm } from '../components/Forms/Reset-Password-Form';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from "react";
-import { getUserInfo } from '../services/actions/auth';
+import AppHeader from '../../components/App-Header/App-Header';
+import { ResetPasswordForm } from '../../components/Forms/Reset-Password-Form';
+import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
 export function ResetPasswordPage() {
-    const userInfo = useSelector(state=> state.authReducer.user);
-    const dispatch = useDispatch();
+    const userInfo = useSelector(state=> state.authReducer.user);    
     const location = useLocation();    
     
-    useEffect(()=> {
-    dispatch(getUserInfo())
-    }, [userInfo])
 
     if(userInfo) {
         return (

@@ -1,5 +1,5 @@
-import AppHeader from '../components/App-Header/App-Header';
-import { ProfileMenu } from '../components/Profile-Menu/Profile-Menu';
+import AppHeader from '../../components/App-Header/App-Header';
+import { ProfileMenu } from '../../components/Profile-Menu/Profile-Menu';
 
 
 

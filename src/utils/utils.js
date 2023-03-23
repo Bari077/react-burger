@@ -9,10 +9,6 @@ export default function checkResponse(response) {
   return Promise.reject(`Что-то пошло не так: ${response.status}`);    
 }
 
-
-
-
-
 export function setCookie(name, value, props) {
     props = props || {};
     let exp = props.expires;

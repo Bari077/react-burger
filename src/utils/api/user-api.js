@@ -1,7 +1,7 @@
-import { url } from "./utils";
-import { setCookie } from "./utils";
+import { url } from "../utils";
+import { setCookie } from "../utils";
 
-import checkResponse from "./utils";
+import checkResponse from "../utils";
 
 
 export async function refreshToken() {    

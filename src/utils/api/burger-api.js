@@ -1,5 +1,5 @@
-import { url } from "./utils";
-import checkResponse from "./utils";
+import { url } from "../utils";
+import checkResponse from "../utils";
 
 export function getIngredientsRequest() {
     return fetch(`${url}ingredients`)

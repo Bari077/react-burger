@@ -1,9 +1,9 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useRef } from "react";
+import { useDispatch } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { signIn, RESET_REQUEST_STATUS } from '../../services/actions/auth';
+import { signIn } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 import { useLocation } from 'react-router-dom';
 
@@ -25,11 +25,7 @@ export const LoginForm =()=> {
     const form = {
         "email": mailValue, 
         "password": passwordValue, 
-    }; 
-
-    
-    const success = useSelector(state=> state.authReducer.success);
-    const error =  useSelector(state=> state.authReducer.error) 
+    };      
     
     const onChange = e => {
         setPasswordValue(e.target.value)
@@ -37,23 +33,14 @@ export const LoginForm =()=> {
 
     const handleSubmit =(evt)=> { 
         evt.preventDefault();       
-        dispatch(signIn(form));                                                                   
+        dispatch(signIn(form, {onSuccess: () => navigate(location.state ? redirect : '/'), onError: () => handleError()}));                                                                   
     }
 
-    const handleError = useCallback(()=> {
+    const handleError = () => {
         setIsShowNote({visible: true});
-        dispatch({type : RESET_REQUEST_STATUS});
         setTimeout(()=> setIsShowNote({visible: false}), 3000);
-    }, [dispatch]) 
+    } 
 
-    useEffect(()=> {
-        error && handleError();
-    }, [error, handleError])
-
-    useEffect(()=> {
-        success && navigate(location.state ? redirect : '/') ;
-        dispatch({type : RESET_REQUEST_STATUS});
-    }, [success, navigate])
 
     return (
         <form onSubmit={handleSubmit} className={formStyle.form}>

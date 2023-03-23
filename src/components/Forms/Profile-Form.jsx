@@ -1,9 +1,9 @@
-import React from "react";
 import formStyle from './Forms.module.css';
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { updateUser, getUserInfo } from "../../services/actions/auth";
 import { useSelector, useDispatch } from 'react-redux';
+import { isValidForm, isValidInput } from '../../utils/validation';
 
 export const ProfileForm =()=> {    
     
@@ -12,7 +12,7 @@ export const ProfileForm =()=> {
     
 
     useEffect(()=> {
-        dispatch(getUserInfo())        
+                
         if(userInfo) {
             setValues({
                 ...values,
@@ -35,22 +35,7 @@ export const ProfileForm =()=> {
         name: false,
         login: false,
         password: false,                
-    });
-
-    const isValidForm =(isValid)=> {
-        return Object.values(isValid).every(item=> item === false)
-    }
-  
-    const isValidInput =(name, value)=> {
-        if(name === 'name') {
-            return value || value === '' ? value.length > 2 : true
-        } if(name === 'login') {
-            const regExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return value || value === '' ? regExp.test(value) : true;
-        } if(name === 'password') {            
-            return value ?.length ? value.length > 5 : true;
-        }
-    }
+    });    
 
     const onChange =(e)=> {
         const target = e.target;

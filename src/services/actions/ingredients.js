@@ -1,4 +1,4 @@
-import { getIngredientsRequest } from "../../utils/burger-api";
+import { getIngredientsRequest } from "../../utils/api/burger-api";
 
 
 export const GET_INITIAL_ITEMS_REQUEST = 'GET_INITIAL_ITEMS_REQUEST';

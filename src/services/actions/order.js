@@ -1,4 +1,4 @@
-import { postOrder } from "../../utils/burger-api";
+import { postOrder } from "../../utils/api/burger-api";
 import { getCookie } from "../../utils/utils";
 
 export const POST_ORDER_REQUEST = 'POST_ORDER_REQUEST';

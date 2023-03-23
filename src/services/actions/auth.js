@@ -2,10 +2,10 @@ import {    registerUserRequest,
             loginRequest,
             logoutRequest,
             forgotPasswordRequest,
-            resetPasswordRequest } from "../../utils/auth-api";
+            resetPasswordRequest } from "../../utils/api/auth-api";
 
 import { setCookie, getCookie } from "../../utils/utils";
-import { getUserRequest, updateUserRequest } from "../../utils/user-api";
+import { getUserRequest, updateUserRequest } from "../../utils/api/user-api";
 
 
 export const REGISTER_USER_REQUEST = 'REGISTER_USER_REQUEST';
@@ -26,13 +26,13 @@ export const RESET_PASSWORD_FAILED = 'RESET_PASSWORD_FAILED';
 export const GET_USER_REQUEST = 'GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const GET_USER_FAILED = 'GET_USER_FAILED';
+export const GET_USER_FINISHED = 'GET_USER_FINISHED';
 export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const UPDATE_USER_FAILED = 'UPDATE_USER_FAILED';
-export const RESET_REQUEST_STATUS = 'RESET_REQUEST_STATUS';
 
 
-export function registerUser(form) {
+export function registerUser(form, {onSuccess, onError}) {
     return function(dispatch) {
         dispatch({
             type: REGISTER_USER_REQUEST,
@@ -42,21 +42,22 @@ export function registerUser(form) {
             if(res.success) {
                 dispatch({
                     type: REGISTER_USER_SUCCESS,
-                    user: res.user,
-                    success: res.success                
+                    user: res.user,                
                 });
+                onSuccess();
             }                       
         })
         .catch((err) => {                                    
             dispatch({
                 type: REGISTER_USER_FAILED                
             });
+            onError();
         })        
     };
 }
 
 
-export function signIn(form) {
+export function signIn(form, {onSuccess, onError}) {
     return function(dispatch) {
         dispatch({
             type: LOGIN_USER_REQUEST,
@@ -69,14 +70,15 @@ export function signIn(form) {
                 dispatch({
                     type: LOGIN_USER_SUCCESS,
                     user: res.user,
-                    success: res.success
                 });
+                onSuccess();
             }             
         })
         .catch((err) => {
             dispatch({
                 type: LOGIN_USER_FAILED,
             });
+            onError();
         })
     }
 }
@@ -107,7 +109,7 @@ export function signOut(refreshToken) {
     }
 }
 
-export function forgotPassword(mail) {
+export function forgotPassword(mail, onSuccess) {
     return function(dispatch) {
         dispatch({
             type: FORGOT_PASSWORD_REQUEST
@@ -116,8 +118,8 @@ export function forgotPassword(mail) {
         .then((res)=> {
             dispatch({
                 type: FORGOT_PASSWORD_SUCCESS,
-                success: res.success
-            })
+            });
+            onSuccess();
         })
         .catch((err) => {
             dispatch({
@@ -127,7 +129,7 @@ export function forgotPassword(mail) {
     }
 }
 
-export function resetPassword(form) {
+export function resetPassword(form, {onSuccess, onError}) {
     return function(dispatch) {
         dispatch({
             type: RESET_PASSWORD_REQUEST
@@ -136,13 +138,14 @@ export function resetPassword(form) {
         .then((res)=> {
             dispatch({
                 type: RESET_PASSWORD_SUCCESS,
-                success: res.success
             })
+            onSuccess();
         })
         .catch((err) => {
             dispatch({
                 type: RESET_PASSWORD_FAILED,
             });
+            onError();
         })
     }
 }
@@ -159,11 +162,16 @@ export function getUserInfo() {
                     type: GET_USER_SUCCESS,
                     user: res.user,
                 });
-            }          
+            }
         })
         .catch((err) => {
             dispatch({
                 type: GET_USER_FAILED,
+            });
+        })
+        .finally(()=> {
+            dispatch({
+                type: GET_USER_FINISHED,
             });
         })              
     }

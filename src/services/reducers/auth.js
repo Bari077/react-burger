@@ -17,17 +17,17 @@ import {
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
     GET_USER_FAILED,
+    GET_USER_FINISHED,
     UPDATE_USER_REQUEST,
     UPDATE_USER_SUCCESS,
     UPDATE_USER_FAILED,
-    RESET_REQUEST_STATUS
 } from "../actions/auth";
 
 const authState = {
     user: null,
     isAuthenticated : false,
-    success: false,
-    error: false,       
+    isUserLoaded: false,
+    userRequest: false,       
 }
 
 export const authReducer = (state = authState, action) => {
@@ -41,13 +41,11 @@ export const authReducer = (state = authState, action) => {
             return {
                 ...state,               
                 user: action.user,
-                success: true
             };
         }
         case REGISTER_USER_FAILED: {
             return {
                 ...state,
-                error: true
             };
         }
 
@@ -63,14 +61,12 @@ export const authReducer = (state = authState, action) => {
             return {
                 ...state,
                 user: action.user,
-                success: action.success,
                 isAuthenticated: true
             };
         }
         case LOGIN_USER_FAILED: {
             return {
                 ...state,
-                error: true
             };
         }
 
@@ -103,13 +99,11 @@ export const authReducer = (state = authState, action) => {
         case FORGOT_PASSWORD_SUCCESS: {
             return {
                 ...state,
-                success: action.success,
             };
         }
         case FORGOT_PASSWORD_FAILED: {
             return {
                 ...state,
-                error: true
             };
         }
 
@@ -122,13 +116,11 @@ export const authReducer = (state = authState, action) => {
         case RESET_PASSWORD_SUCCESS: {
             return {
                 ...state,
-                success: action.success,
             };
         }
         case RESET_PASSWORD_FAILED: {
             return {
                 ...state,
-                error: true
             };
         }
 
@@ -136,20 +128,32 @@ export const authReducer = (state = authState, action) => {
         case GET_USER_REQUEST: {
             return {
                 ...state,
+                userRequest: true,
+                isUserLoaded: false,
             };
         }
         case GET_USER_SUCCESS: {
             return {
                 ...state,
                 user: action.user,
-                isAuthenticated: true,
+                isUserLoaded: false,
+                userRequest: false,
             };
         }
         case GET_USER_FAILED: {
             return {
                 ...state,
-                user: null
+                user: null,
+                isUserLoaded: false,
+                userRequest: false,
             };
+        }
+        case GET_USER_FINISHED: {
+            return {
+                ...state,
+                isUserLoaded: true,
+                userRequest: false,
+            }
         }
         
         
@@ -171,13 +175,7 @@ export const authReducer = (state = authState, action) => {
         }
 
 
-        case RESET_REQUEST_STATUS: {
-            return {
-                ...state,
-                error: false,
-                success: false
-            }
-        }
+
         default: {
             return state;
         }

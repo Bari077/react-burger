@@ -1,15 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
-import AppHeader from '../components/App-Header/App-Header';
-import BurgerIngredients from '../components/Burger-Ingrdients/Burger-Ingredients';
-import BurgerConstructor from '../components/Burger-Constructor/Burger-Constructor';
-import { getItems } from '../services/actions/ingredients';
+import AppHeader from '../../components/App-Header/App-Header';
+import BurgerIngredients from '../../components/Burger-Ingrdients/Burger-Ingredients';
+import BurgerConstructor from '../../components/Burger-Constructor/Burger-Constructor';
+import { getItems } from '../../services/actions/ingredients';
 import { useEffect } from 'react';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 
 export function HomePage() {
-
     const itemsRequest = useSelector(state => state.ingredientsReducer.itemsRequest);
     const itemsFailed = useSelector(state => state.ingredientsReducer.itemsFailed);
     const dispatch = useDispatch();
@@ -20,8 +19,7 @@ export function HomePage() {
     },[])
 
     return (
-    <>
-    {itemsRequest && 'Загрузка...'}
+    <>    
     {itemsFailed && 'Произошла ошибка'}
     {!itemsRequest && !itemsFailed && (
            

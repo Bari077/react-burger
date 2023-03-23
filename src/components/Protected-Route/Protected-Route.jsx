@@ -1,24 +1,14 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getUserInfo } from "../../services/actions/auth";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import PropTypes from 'prop-types';
 
-export const ProtectedRouteElement = ({element})=> {
-    const [isUserLoaded, setIsUserLoaded] = useState(false);
-    const dispatch = useDispatch()
+export const ProtectedRouteElement = ({element})=> {    
+    
+    const isUserLoaded = useSelector(state=> state.authReducer.isUserLoaded);
     const userInfo = useSelector(state=> state.authReducer.user);
     const pathname = useLocation();
 
-    const init = ()=> {
-        dispatch(getUserInfo())
-        setTimeout(()=> {
-            setIsUserLoaded(true)
-        }, 1000)        
-    }
 
-    useEffect(()=> {
-        init()
-    }, [])
     
     if(!isUserLoaded) {
         return null
@@ -27,4 +17,8 @@ export const ProtectedRouteElement = ({element})=> {
     return userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>;
      
     
+}
+
+ProtectedRouteElement.propTypes = {
+    element: PropTypes.node
 }

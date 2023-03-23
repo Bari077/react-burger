@@ -1,6 +1,6 @@
-import AppHeader from '../components/App-Header/App-Header';
-import { ProfileForm } from '../components/Forms/Profile-Form';
-import { ProfileMenu } from '../components/Profile-Menu/Profile-Menu';
+import AppHeader from '../../components/App-Header/App-Header';
+import { ProfileForm } from '../../components/Forms/Profile-Form';
+import { ProfileMenu } from '../../components/Profile-Menu/Profile-Menu';
 
 
 

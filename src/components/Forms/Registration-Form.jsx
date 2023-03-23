@@ -1,9 +1,9 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useRef } from "react";
+import { useDispatch } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate, } from 'react-router-dom';
-import { registerUser, RESET_REQUEST_STATUS } from '../../services/actions/auth';
+import { registerUser } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 
 
@@ -27,9 +27,7 @@ export const RegistrationForm =()=> {
         "name": nameValue 
     };    
    
-
-    const success = useSelector(state=> state.authReducer.success);
-    const error =  useSelector(state=> state.authReducer.error) 
+ 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const note = (<Notification onClose={()=> setIsShowNote({visible: false})}>Ошибка регистрации</Notification>)      
@@ -37,23 +35,14 @@ export const RegistrationForm =()=> {
 
     const handleSubmit =(evt)=> { 
         evt.preventDefault();       
-        dispatch(registerUser(form));                                                                   
+        dispatch(registerUser(form, {onSuccess: () => navigate('/login'), onError: () => handleError()}));                                                                   
     }
    
-    const handleError = useCallback(()=> {
+    const handleError = ()=> {
         setIsShowNote({visible: true});
-        dispatch({type : RESET_REQUEST_STATUS});
         setTimeout(()=> setIsShowNote({visible: false}), 3000);
-    }, [dispatch]) 
+    }
 
-    useEffect(()=> {
-        error && handleError();
-    }, [error, handleError])
-
-    useEffect(()=> {
-        success && navigate('/login');
-        dispatch({type : RESET_REQUEST_STATUS});
-    }, [success, navigate])
 
     return (
         <form onSubmit={handleSubmit} className={formStyle.form}>
