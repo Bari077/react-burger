@@ -14,6 +14,8 @@ import {
     RESET_PASSWORD_REQUEST,
     RESET_PASSWORD_SUCCESS,
     RESET_PASSWORD_FAILED,
+    RESET_ERROR_STATUS,
+    RESET_SUCCESS_STATUS,
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
     GET_USER_FAILED,
@@ -25,9 +27,10 @@ import {
 
 const authState = {
     user: null,
-    isAuthenticated : false,
     isUserLoaded: false,
-    userRequest: false,       
+    userRequest: false,
+    isError: false,
+    isSuccess: false,       
 }
 
 export const authReducer = (state = authState, action) => {
@@ -46,6 +49,7 @@ export const authReducer = (state = authState, action) => {
         case REGISTER_USER_FAILED: {
             return {
                 ...state,
+                isError: true,
             };
         }
 
@@ -61,12 +65,12 @@ export const authReducer = (state = authState, action) => {
             return {
                 ...state,
                 user: action.user,
-                isAuthenticated: true
             };
         }
         case LOGIN_USER_FAILED: {
             return {
                 ...state,
+                isError: true,
             };
         }
 
@@ -80,8 +84,7 @@ export const authReducer = (state = authState, action) => {
         case LOGOUT_SUCCESS: {
             return {
                 ...state,
-                user: null,                
-                isAuthenticated : false
+                user: null,
             };
         }
         case LOGOUT_FAILED: {
@@ -116,14 +119,29 @@ export const authReducer = (state = authState, action) => {
         case RESET_PASSWORD_SUCCESS: {
             return {
                 ...state,
+                isSuccess: true,
             };
         }
         case RESET_PASSWORD_FAILED: {
             return {
                 ...state,
+                isError: true
             };
         }
 
+        case RESET_ERROR_STATUS: {
+            return {
+                ...state,
+                isError: false
+            }
+        }
+
+        case RESET_SUCCESS_STATUS: {
+            return {
+                ...state,
+                isSuccess: false
+            }
+        }
 
         case GET_USER_REQUEST: {
             return {

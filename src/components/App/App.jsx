@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { ProfileForm } from '../Forms/Profile-Form';
 import { OrderList } from '../Order-List/Order-List';
+import { FeedPage } from '../../pages/feed/feed';
+import { FeedOrderPage } from '../../pages/feed-order/feed-order';
 
 
 
@@ -37,10 +39,12 @@ const App =()=> {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />}/>}>
-            <Route path="" element={<ProfileForm />} />
+            <Route path=""  element={<ProfileForm />} />
             <Route path="orders" element={<OrderList />} />
           </Route>          
           <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed/:id" element={<FeedOrderPage />} />
         </Routes>
       </Router>)}
     </>    

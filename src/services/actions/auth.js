@@ -23,6 +23,8 @@ export const FORGOT_PASSWORD_FAILED = 'FORGOT_PASSWORD_FAILED';
 export const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
 export const RESET_PASSWORD_FAILED = 'RESET_PASSWORD_FAILED';
+export const RESET_ERROR_STATUS = 'RESET_ERROR_STATUS';
+export const RESET_SUCCESS_STATUS = 'RESET_SUCCESS_STATUS';
 export const GET_USER_REQUEST = 'GET_USER_REQUEST';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const GET_USER_FAILED = 'GET_USER_FAILED';
@@ -109,17 +111,19 @@ export function signOut(refreshToken) {
     }
 }
 
-export function forgotPassword(mail, onSuccess) {
+export function forgotPassword(mail,{ onSuccess}) {
     return function(dispatch) {
         dispatch({
             type: FORGOT_PASSWORD_REQUEST
         });
         forgotPasswordRequest(mail)
         .then((res)=> {
-            dispatch({
-                type: FORGOT_PASSWORD_SUCCESS,
-            });
-            onSuccess();
+            if(res.success) {
+                dispatch({
+                    type: FORGOT_PASSWORD_SUCCESS,
+                });
+                onSuccess();
+            }            
         })
         .catch((err) => {
             dispatch({

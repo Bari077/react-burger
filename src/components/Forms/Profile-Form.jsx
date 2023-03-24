@@ -109,7 +109,7 @@ export const ProfileForm =()=> {
     
 
     return (
-        <form onSubmit={handleSubmit} className={formStyle.form}>            
+        <form onSubmit={handleSubmit} className={formStyle.profileForm}>            
             <Input            
             type={'text'}
             placeholder={'Имя'}

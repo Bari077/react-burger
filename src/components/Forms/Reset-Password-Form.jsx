@@ -1,15 +1,17 @@
 import formStyle from './Forms.module.css';
 import { useState, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { resetPassword } from '../../services/actions/auth';
+import { resetPassword ,RESET_ERROR_STATUS, RESET_SUCCESS_STATUS } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 
 export const ResetPasswordForm =()=> {
 
-    const [isShowNote, setIsShowNote] = useState(false);
-    const [isShowError, setIsShowError] = useState(false);
+    const isError = useSelector(state=> state.authReducer.isError);
+    const isSuccess = useSelector(state=> state.authReducer.isSuccess);
+    /*const [isShowNote, setIsShowNote] = useState(false);
+    const [isShowError, setIsShowError] = useState(false);*/
 
     const [mailKeyValue, setMailKeyValue] = useState('');
     const inputMailKeyRef = useRef(null);
@@ -26,8 +28,8 @@ export const ResetPasswordForm =()=> {
     const navigate = useNavigate();     
     const dispatch = useDispatch();
 
-    const note = (<Notification onClose={()=> setIsShowNote({visible: false})}>Пароль успешно изменен </Notification>);
-    const errorNote = (<Notification onClose={()=> setIsShowError({visible: false})}>Не удалось изменить пароль. Проверьте, правильно ли указан код из почты. </Notification>);
+    const note = (<Notification onClose={()=> dispatch({type: RESET_SUCCESS_STATUS})}>Пароль успешно изменен </Notification>);
+    const errorNote = (<Notification onClose={()=> dispatch({type: RESET_ERROR_STATUS})}>Не удалось изменить пароль. Проверьте, правильно ли указан код из почты. </Notification>);
 
 
     const handleSubmit =(evt)=> { 
@@ -36,25 +38,14 @@ export const ResetPasswordForm =()=> {
     }
 
     const handleSuccess = ()=> {
-        setIsShowNote({visible: true});
-        setTimeout(()=> setIsShowNote({visible: false}), 3000);
+        setTimeout(()=> dispatch({type: RESET_SUCCESS_STATUS}), 3000);
         setTimeout(()=> navigate('/login', {state:{from: '/reset-password'}}), 3000)
     }
     
     const handleError = ()=> {
-        setIsShowError({visible: true});
-        setTimeout(()=> setIsShowError({visible: false}), 3000);
-    } 
-
-/*
-    useEffect(()=> {
-        error && handleError();
-    }, [error, handleError])
+        setTimeout(()=> dispatch({type: RESET_ERROR_STATUS}), 3000);    } 
 
 
-    useEffect(()=> {
-        success && handleSuccess();
-    }, [success, handleSuccess])*/
 
     return (
         <form onSubmit={handleSubmit} className={formStyle.form}>
@@ -87,8 +78,8 @@ export const ResetPasswordForm =()=> {
                 Войти
                 </Button>
             </div>
-            {isShowNote.visible && note}
-            {isShowError.visible && errorNote}
+            {isSuccess && note}
+            {isError && errorNote}
         </form>
     )
 }

@@ -1,9 +1,9 @@
 import formStyle from './Forms.module.css';
 import { useState, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { signIn } from '../../services/actions/auth';
+import { signIn, RESET_ERROR_STATUS } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 import { useLocation } from 'react-router-dom';
 
@@ -13,13 +13,14 @@ export const LoginForm =()=> {
     const dispatch = useDispatch();
     const redirect = location.state?.from?.pathname ;
 
-    const [isShowNote, setIsShowNote] = useState(false)
-    const note = (<Notification onClose={()=> setIsShowNote({visible: false})}>Не удается войти, проверьте верно ли указаны почта и пароль </Notification>)  
+    const isError = useSelector(state=> state.authReducer.isError);
+    const note = (<Notification onClose={()=> dispatch({type: RESET_ERROR_STATUS})}>Не удается войти, проверьте верно ли указаны почта и пароль </Notification>)  
 
     const [mailValue, setMailValue] = useState('');
     const inputMailRef = useRef(null);
 
-    const [passwordValue, setPasswordValue] = useState('')
+    const [passwordValue, setPasswordValue] = useState('')    
+    
    
     
     const form = {
@@ -37,8 +38,7 @@ export const LoginForm =()=> {
     }
 
     const handleError = () => {
-        setIsShowNote({visible: true});
-        setTimeout(()=> setIsShowNote({visible: false}), 3000);
+        setTimeout(()=> dispatch({type: RESET_ERROR_STATUS}), 3000);
     } 
 
 
@@ -78,7 +78,7 @@ export const LoginForm =()=> {
                 Восстановить пароль
                 </Button>
             </div>
-            {isShowNote.visible && note} 
+            {isError && note} 
         </form>
     )
 }

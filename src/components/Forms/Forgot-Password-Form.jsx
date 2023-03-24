@@ -18,7 +18,7 @@ export const ForgotPasswordForm =()=> {
 
     const handleSubmit =(evt)=> { 
         evt.preventDefault();       
-        dispatch(forgotPassword(mail, navigate('/reset-password', {state:{from: '/forgot-password'}})));                                                                   
+        dispatch(forgotPassword(mail, {onSuccess: ()=>navigate('/reset-password', {state:{from: '/forgot-password'}})}));                                                                   
     }
     
 

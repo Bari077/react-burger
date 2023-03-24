@@ -1,17 +1,17 @@
 import formStyle from './Forms.module.css';
 import { useState, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate, } from 'react-router-dom';
-import { registerUser } from '../../services/actions/auth';
+import { registerUser, RESET_ERROR_STATUS } from '../../services/actions/auth';
 import { Notification } from '../Notification/Notification';
 
 
 
 export const RegistrationForm =()=> {
 
-    const [isShowNote, setIsShowNote] = useState(false)
-
+    
+    const isError = useSelector(state=> state.authReducer.isError);
     const [mailValue, setMailValue] = useState('');
     const inputMailRef = useRef(null);
     const [nameValue, setNamelValue] = useState('');
@@ -30,7 +30,7 @@ export const RegistrationForm =()=> {
  
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const note = (<Notification onClose={()=> setIsShowNote({visible: false})}>Ошибка регистрации</Notification>)      
+    const note = (<Notification onClose={()=> dispatch({type : RESET_ERROR_STATUS})}>Ошибка регистрации</Notification>)      
    
 
     const handleSubmit =(evt)=> { 
@@ -38,9 +38,8 @@ export const RegistrationForm =()=> {
         dispatch(registerUser(form, {onSuccess: () => navigate('/login'), onError: () => handleError()}));                                                                   
     }
    
-    const handleError = ()=> {
-        setIsShowNote({visible: true});
-        setTimeout(()=> setIsShowNote({visible: false}), 3000);
+    const handleError = ()=> {        
+        setTimeout(()=> dispatch({type : RESET_ERROR_STATUS}), 3000);
     }
 
 
@@ -86,7 +85,7 @@ export const RegistrationForm =()=> {
                 Войти
                 </Button>
             </div> 
-            {isShowNote.visible && note}           
+            {isError && note}           
         </form>
     )
 }

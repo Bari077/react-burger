@@ -2,7 +2,6 @@ import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
-import { any } from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 
 import appHeaderStyle from './App-Header.module.css';
@@ -26,9 +25,9 @@ function AppHeader() {
                         </Link>
                     </li>
                     <li className={appHeaderStyle.element}>
-                        <Link to={{ pathname: `/orderlist` }} className={appHeaderStyle.link}>
-                            <ListIcon type={pathname === `/orderlist` ? "primary" : "secondary"} />
-                            <p className={ pathname === `/orderlist` ? textClass : `${textClass} text_color_inactive`}>Лента заказов</p>
+                        <Link to={{ pathname: `/feed` }} className={appHeaderStyle.link}>
+                            <ListIcon type={pathname === `/feed` ? "primary" : "secondary"} />
+                            <p className={ pathname === `/feed` ? textClass : `${textClass} text_color_inactive`}>Лента заказов</p>
                         </Link>                        
                     </li>
                 </nav>                    

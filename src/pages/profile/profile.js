@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import AppHeader from '../../components/App-Header/App-Header';
 import { ProfileMenu } from '../../components/Profile-Menu/Profile-Menu';
-
+import style from './profile.module.css'
 
 
 export function ProfilePage() { 
@@ -11,8 +11,10 @@ export function ProfilePage() {
         <div className="App">
             <AppHeader />
             <main className="main">
-                <ProfileMenu />
-                <Outlet />                
+                <div className={style.content}>
+                    <ProfileMenu />
+                    <Outlet />
+                </div>                                
             </main>            
         </div>
     )
