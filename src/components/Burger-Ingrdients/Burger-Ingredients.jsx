@@ -9,20 +9,35 @@ import { setCurrentItem, REMOVE_INGREDIENT_DETAILS  } from '../../services/actio
 
 
 
+
 const BurgerIngredients =()=> {
     const ingredients = useSelector(state => state.ingredientsReducer.items);
     const dispatch = useDispatch();     
     const [current, setCurrent] = React.useState('one');
     const [isShowModal, setIsShowModal] = React.useState(false);
+    const currentIngredient = JSON.parse(sessionStorage.getItem('currentIngredient'))
+    
+    useEffect(()=> {
+        if(currentIngredient) {
+            dispatch(setCurrentItem(currentIngredient));
+            setIsShowModal({ visible: true });
+            window.history.replaceState(null, "", `/ingredients/${currentIngredient._id}`);            
+        }
+    },[])
+    
     
     const handleOpenModal =(item)=> {
-        dispatch(setCurrentItem(item));        
-        setIsShowModal({ visible: true });                             
+        window.history.replaceState(null, "", `ingredients/${item._id}`);
+        setIsShowModal({ visible: true });
+        sessionStorage.setItem('currentIngredient', JSON.stringify(item));
+        dispatch(setCurrentItem(item));                                     
     }
  
     const handleCloseModal =()=> {
         setIsShowModal({ visible: false });
-        dispatch({ type: REMOVE_INGREDIENT_DETAILS });        
+        dispatch({ type: REMOVE_INGREDIENT_DETAILS });
+        sessionStorage.removeItem('currentIngredient');
+        window.history.replaceState(null, "", `/`)        
     }
     
 
@@ -43,7 +58,7 @@ const BurgerIngredients =()=> {
         }      
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         window.addEventListener('scroll', handleScroll, true);
         return () => {
             window.removeEventListener('scroll', handleScroll, true);
@@ -54,9 +69,7 @@ const BurgerIngredients =()=> {
         <Modal onClose={handleCloseModal} > 
            <IngredientDetails />
         </Modal>
-    );   
-    
-
+    );     
     
     return(
         <section className={burgerIngredientsStyle.section}>                

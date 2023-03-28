@@ -1,47 +1,53 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AppHeader from '../App-Header/App-Header';
-import BurgerIngredients from '../Burger-Ingrdients/Burger-Ingredients';
-import BurgerConstructor from '../Burger-Constructor/Burger-Constructor';
-import { getItems } from '../../services/actions/ingredients';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HomePage } from '../../pages/home/home';
+import { LoginPage } from '../../pages/login/login';
+import { RegistrationPage } from '../../pages/registration/registration';
+import { ForgotPasswordPage } from '../../pages/forgot-password/forgot-password';
+import { ResetPasswordPage } from '../../pages/reset-password/reset-password';
+import { ProfilePage } from '../../pages/profile/profile';
+import { ProtectedRouteElement } from '../Protected-Route/Protected-Route';
+import { IngredientPage } from '../../pages/ingredient/ingredient';
+import { Preloader } from '../Preloader/Preloader';
+import { getUserInfo } from '../../services/actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { ProfileForm } from '../Forms/Profile-Form';
+import { OrderList } from '../Order-List/Order-List';
+import { FeedPage } from '../../pages/feed/feed';
+import { FeedOrderPage } from '../../pages/feed-order/feed-order';
 
 
 
-const App =()=> {   
-  
+
+const App =()=> {
   const itemsRequest = useSelector(state => state.ingredientsReducer.itemsRequest);
-  const itemsFailed = useSelector(state => state.ingredientsReducer.itemsFailed);
-  const dispatch = useDispatch();
-  
-  
-  useEffect(()=> {    
-    dispatch(getItems());
-  },[])  
-    
-  
+  const userRequest = useSelector(state=> state.authReducer.userRequest);
+  const dispatch = useDispatch(); 
+  useEffect(()=> {
+    dispatch(getUserInfo())
+    }, [])
+
   return (
     <>
-    {itemsRequest && 'Загрузка...'}
-    {itemsFailed && 'Произошла ошибка'}
-    {!itemsRequest && !itemsFailed && (
-           
-        <div className="App">
-          <AppHeader />
-            <main className="main">
-              <h2 className="text text_type_main-large pl-5 pb-5">Соберите бургер</h2>
-              <DndProvider backend={HTML5Backend}>
-                <div className="content">                          
-                  <BurgerIngredients />
-                  <BurgerConstructor />                                  
-                </div>
-              </DndProvider>                      
-            </main>      
-        </div>      
-      )}
-    </>
+      {itemsRequest || userRequest && (<Preloader/>)}
+      {!userRequest && (           
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegistrationPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />}/>}>
+            <Route path=""  element={<ProfileForm />} />
+            <Route path="orders" element={<OrderList />} />
+          </Route>          
+          <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed/:id" element={<FeedOrderPage />} />
+        </Routes>
+      </Router>)}
+    </>    
   );
 }
 

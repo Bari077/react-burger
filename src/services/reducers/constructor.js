@@ -7,9 +7,8 @@ import {
 } from "../actions/constructor";
 
 const constructorState = {
-    constructorItems: [], 
-    bun: null,
-    hasBun: false
+    constructorItems: JSON.parse(localStorage.getItem('constructorIngredients')) ? JSON.parse(localStorage.getItem('constructorIngredients')) : [], 
+    bun: JSON.parse(localStorage.getItem('bun')) ? JSON.parse(localStorage.getItem('bun')) : null,
 }
 
 export const constructorReducer = (state = constructorState, action) => {
@@ -23,8 +22,7 @@ export const constructorReducer = (state = constructorState, action) => {
         case ADD_CONSTRUCTOR_BUN: {
             return {
                 ...state,
-                bun: action.bun,                
-                hasBun: action.bun.type === 'bun' ? true : state.hasBun,
+                bun: action.bun,
             }
         }
         case DELETE_CONSTRUCTOR_ITEM: {
@@ -43,7 +41,6 @@ export const constructorReducer = (state = constructorState, action) => {
             return {
                 constructorItems: [], 
                 bun: null,
-                hasBun: false
             }
         }
         default: {
