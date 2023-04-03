@@ -1,3 +1,5 @@
+import { WS_PRIVATE_START } from "../actions/ws-private";
+
 export const socketMiddleware = (wsUrl, wsActions) => {
   return store => {
     let socket = null;
@@ -8,7 +10,9 @@ export const socketMiddleware = (wsUrl, wsActions) => {
       const { wsInit, onOpen, onClose, onError, onMessage } = wsActions;
       
       if (type === wsInit) {
-        socket = new WebSocket(wsUrl);
+        socket = type === WS_PRIVATE_START ? 
+        new WebSocket(`${wsUrl}${action.payload}`) :
+        new WebSocket(wsUrl);
       }
       if (socket) {
         socket.onopen = event => {
@@ -30,11 +34,6 @@ export const socketMiddleware = (wsUrl, wsActions) => {
         socket.onclose = event => {
           dispatch({ type: onClose, payload: event });
         };
-
-       /* if (type === wsSendMessage) {
-          const message = { ...payload, token: user.token };
-          socket.send(JSON.stringify(message));
-        }*/
       }
 
       next(action);

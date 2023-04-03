@@ -4,8 +4,11 @@
 }
 
 .container {
-    max-height: 110vh;
+    max-height: 120vh;
     overflow-y: auto;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .container::-webkit-scrollbar {
@@ -33,6 +36,10 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+    max-height: 350px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 .ordersDone {

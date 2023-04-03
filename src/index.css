@@ -14,11 +14,15 @@ code {
 
 .main {
   width: 1280px;
-  margin: 0 auto;  
+  margin: 0 auto; 
 }
 
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
+}
+
+.notFound {
+  text-align: center;
 }

@@ -1,19 +1,23 @@
 .section {
     width: 640px;
     margin: 0 auto 30px;
-    padding-top: 80px;
+    padding: 80px 80px 0;
 }
 
 .number {
     text-align: center;
 }
 
+.status {
+    color: #00CCCC;
+}
+
 .itemList {
     list-style-type: none;
     padding: 0;
     margin: 0 0 40px 0;
-    max-height: 40vh;
-    min-height: 30vh;
+    max-height: 35vh;
+    min-height: 25vh;
     overflow-y: auto;
 }
 

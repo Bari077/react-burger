@@ -6,6 +6,9 @@
 .container {
     max-height: 110vh;
     overflow-y: auto;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .container::-webkit-scrollbar {

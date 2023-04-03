@@ -1,11 +1,10 @@
 import AppHeader from '../../components/App-Header/App-Header';
 import IngredientDetails from '../../components/Ingredient-Details/Ingredient-Details';
-import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getItems } from '../../services/actions/ingredients';
 import { useEffect, useState } from 'react';
 import styles from './ingredient.module.css';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 export function IngredientPage() {
     
