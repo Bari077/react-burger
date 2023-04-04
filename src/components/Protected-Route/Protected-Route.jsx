@@ -14,10 +14,7 @@ export const ProtectedRouteElement = ({element})=> {
         return null
     }
     
-
-    if(isUserLoaded) {
-        return userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>;
-    }   
+    return userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>;
      
     
 }
