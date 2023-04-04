@@ -24,7 +24,7 @@ const wsActions = {
     onOpen: WS_CONNECTION_SUCCESS,
     onError: WS_CONNECTION_ERROR,
     onClose: WS_CONNECTION_CLOSED,
-    onMessage: WS_CONNECTION_ORDERS
+    onMessage: WS_CONNECTION_ORDERS,
 }
 
 const wsPrivateActions = {

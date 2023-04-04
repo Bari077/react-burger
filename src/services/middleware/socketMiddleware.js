@@ -7,7 +7,7 @@ export const socketMiddleware = (wsUrl, wsActions) => {
     return next => action => {
       const { dispatch } = store;
       const { type } = action;
-      const { wsInit, onOpen, onClose, onError, onMessage } = wsActions;
+      const { wsInit, onOpen, onClose, onError, onMessage, wsClose } = wsActions;
       
       if (type === wsInit) {
         socket = type === WS_PRIVATE_START ? 
@@ -32,9 +32,12 @@ export const socketMiddleware = (wsUrl, wsActions) => {
         };
 
         socket.onclose = event => {
-          dispatch({ type: onClose, payload: event });
+          dispatch({ type: onClose, payload: event });          
         };
-      }
+        if(type === onClose) {
+          socket.close();
+        }
+      }      
 
       next(action);
     };
