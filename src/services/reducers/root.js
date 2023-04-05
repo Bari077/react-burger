@@ -4,6 +4,8 @@ import { ingredientModalReducer } from "./ingredient-modal";
 import { constructorReducer } from "./constructor";
 import {  orderReducer } from "./order";
 import { authReducer } from "./auth";
+import { wsPublicReducer } from "./ws-public";
+import { wsPrivateReducer } from "./ws-private";
 
 
 export const rootReducer = combineReducers({
@@ -11,5 +13,7 @@ export const rootReducer = combineReducers({
     ingredientModalReducer,
     constructorReducer,
     orderReducer,
-    authReducer
+    authReducer,
+    wsPublicReducer,
+    wsPrivateReducer
 });

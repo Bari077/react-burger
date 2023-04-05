@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const url = 'https://norma.nomoreparties.space/api/';
+export const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
 export function checkResponse(response) {  
     if(response.ok) {      
@@ -9,8 +10,7 @@ export function checkResponse(response) {
   return Promise.reject(`Что-то пошло не так: ${response.status}`);    
 }
 
-export async function refreshToken() {    
-  const refToken = localStorage.getItem('refreshToken');
+export async function refreshToken(refToken) {
   const response = await fetch(`${url}auth/token`, {
       method: 'POST',
       headers: {
@@ -19,8 +19,8 @@ export async function refreshToken() {
       body: JSON.stringify({ "token": refToken })
   })
   if (response.ok) {
-      localStorage.removeItem('refreshToken');
-      setCookie('accessToken', "", {'max-age' : -1});
+      //localStorage.removeItem('refreshToken');
+      //setCookie('accessToken', null, {'max-age' : -1});
       return response;                                
   }
   return await Promise.reject(`Что-то пошло не так: ${response.status}`);
@@ -34,19 +34,14 @@ export const fetchWithRefresh = async (url, options)=> {
   } else {
       const error = await response.json();        
       if (error.message === 'jwt expired') {
-          refreshToken().then(checkResponse)
+          refreshToken(localStorage.getItem('refreshToken')).then(checkResponse)
           .then(res=> {              
               options.headers.authorization = res.accessToken;
               localStorage.setItem('refreshToken', res.refreshToken);
               setCookie('accessToken', res.accessToken);
-          })          
-          const response = await fetch(url, options);
-          if(response.ok) {
-          const data = await response.json();          
-          return data      
-          } else {
-            return Promise.reject(response.status)
-          }
+              return fetch(url, options)                       
+          })
+          return                   
       }           
       return Promise.reject(error.message) 
   }    

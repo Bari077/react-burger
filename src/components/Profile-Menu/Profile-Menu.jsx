@@ -22,8 +22,10 @@ export const ProfileMenu=()=> {
                 <NavLink to={{pathname : '/profile/orders'}} className={`${profileMenuStyle.element} text text_type_main-medium text_color_inactive`} activeClassName={profileMenuStyle.elementActive}>История заказов</ NavLink>
                 <Button htmlType='button' type='secondary' extraClass={`${profileMenuStyle.element}  text text_type_main-medium text_color_inactive`} onClick={handleSignOut}>Выход</ Button>
             </nav>
-            <p className="text text_type_main-default text_color_inactive">В этом разделе вы можете
-            изменить свои персональные данные</p>
+            <p className="text text_type_main-default text_color_inactive">
+            {pathname === '/profile' ?
+            'В этом разделе вы можете изменить свои персональные данные' : 
+            'В этом разделе вы можете просмотреть свою историю заказов'}</p>
         </div>        
     )
 }

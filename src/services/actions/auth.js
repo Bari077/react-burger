@@ -161,7 +161,7 @@ export function getUserInfo() {
         });
         getUserRequest(getCookie('accessToken'))
         .then((res)=> {                        
-            if(res.success) {
+            if(res.success) {                
                 dispatch({
                     type: GET_USER_SUCCESS,
                     user: res.user,
