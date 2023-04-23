@@ -19,8 +19,8 @@ export async function refreshToken(refToken) {
       body: JSON.stringify({ "token": refToken })
   })
   if (response.ok) {
-      //localStorage.removeItem('refreshToken');
-      //setCookie('accessToken', null, {'max-age' : -1});
+      localStorage.removeItem('refreshToken');
+      setCookie('accessToken', null, {'max-age' : -1});
       return response;                                
   }
   return await Promise.reject(`Что-то пошло не так: ${response.status}`);

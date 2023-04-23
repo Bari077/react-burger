@@ -3,8 +3,9 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { resetPassword ,RESET_ERROR_STATUS, RESET_SUCCESS_STATUS } from '../../services/actions/auth';
+import { RESET_ERROR_STATUS, RESET_SUCCESS_STATUS } from '../../services/actions/user';
 import { Notification } from '../Notification/Notification';
+import { resetPassword } from '../../services/auth';
 
 export const ResetPasswordForm =()=> {
 

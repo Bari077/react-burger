@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, FC } from 'react';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ConstructorCard } from '../Constructor-Card/Constructor-Card';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -8,7 +8,7 @@ import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/order';
-import { RESET_CONSTRUCTOR, addItem } from '../../services/actions/constructor';
+import { addItem } from '../../services/actions/constructor';
 import { useDrop } from 'react-dnd';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,8 @@ const BurgerConstructor =()=> {
             isHover: monitor.getItemType() !==bun ? monitor.isOver() : null,
         }),
         drop(item) {
-            dispatch(addItem(item, item.ingredient._id));                                    
+            console.log(item)
+            dispatch(addItem(item.ingredient));                                    
         }                             
     })
     

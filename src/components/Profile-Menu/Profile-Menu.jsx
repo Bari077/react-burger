@@ -2,7 +2,7 @@ import profileMenuStyle from './Profile-Menu.module.css';
 import { NavLink } from '../Nav-Link/Nav-Link';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { signOut } from '../../services/actions/auth';
+import { signOut } from '../../services/auth';
 import { useDispatch } from 'react-redux';
 
 

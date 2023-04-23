@@ -3,7 +3,8 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate, } from 'react-router-dom';
-import { registerUser, RESET_ERROR_STATUS } from '../../services/actions/auth';
+import { RESET_ERROR_STATUS } from '../../services/actions/user';
+import { registerUser } from '../../services/auth';
 import { Notification } from '../Notification/Notification';
 
 

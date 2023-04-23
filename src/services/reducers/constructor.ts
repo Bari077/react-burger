@@ -4,14 +4,34 @@ import {
     DELETE_CONSTRUCTOR_ITEM,
     SORT_CONSTRUCTOR,
     RESET_CONSTRUCTOR,
+    TConstructorActions
 } from "../actions/constructor";
 
-const constructorState = {
-    constructorItems: JSON.parse(localStorage.getItem('constructorIngredients')) ? JSON.parse(localStorage.getItem('constructorIngredients')) : [], 
-    bun: JSON.parse(localStorage.getItem('bun')) ? JSON.parse(localStorage.getItem('bun')) : null,
+import { TIngredientDetails } from "../types/data";
+
+type TConstructorState = {
+    constructorItems: ReadonlyArray<TIngredientDetails>;
+    bun: TIngredientDetails | null
 }
 
-export const constructorReducer = (state = constructorState, action) => {
+const itemStorageValue = localStorage.getItem('constructorIngredients');
+let parsedItem;
+if(typeof itemStorageValue === 'string') {    
+    parsedItem = JSON.parse(itemStorageValue)    
+};
+
+const bunStorageValue = localStorage.getItem('bun');
+let parsedBun;
+if(typeof bunStorageValue === 'string') {    
+    parsedBun = JSON.parse(bunStorageValue)    
+};
+
+const constructorState: TConstructorState = {
+    constructorItems: parsedItem ? parsedItem : [], 
+    bun: parsedBun ? parsedBun : null,
+}
+
+export const constructorReducer = (state = constructorState, action: TConstructorActions): TConstructorState => {
     switch (action.type) {
         case ADD_CONSTRUCTOR_ITEM: {
             return {
@@ -28,7 +48,7 @@ export const constructorReducer = (state = constructorState, action) => {
         case DELETE_CONSTRUCTOR_ITEM: {
             return {
                 ...state,
-                constructorItems: state.constructorItems.filter((item, index)=> index !== action.index),
+                constructorItems: state.constructorItems.filter((item, index: number)=> index !== action.index),
             }
         }
         case SORT_CONSTRUCTOR: {

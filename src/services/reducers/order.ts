@@ -1,23 +1,26 @@
-import {       
-        
+import {        
     POST_ORDER_REQUEST,
     POST_ORDER_SUCCESS,
     POST_ORDER_FAILED,
-    REMOVE_ORDER_DETAILS,      
+    REMOVE_ORDER_DETAILS,
+    TOrderActions      
 } from "../actions/order";
 
-const orderState = {
-    orderRequest: false,
-    orderFailed: false,
-    orderDetails: {
-        name: '',
-        order: {
-            number: '',
-        }
-    },
+import { TOrderDetails } from "../types/data";
+
+type TOrderState = {
+    orderRequest: boolean;
+    orderFailed: boolean;
+    orderDetails: TOrderDetails | null
 }
 
-export const orderReducer = (state = orderState, action)=> {
+const orderState: TOrderState = {
+    orderRequest: false,
+    orderFailed: false,
+    orderDetails: null,
+}
+
+export const orderReducer = (state = orderState, action: TOrderActions): TOrderState => {
     switch (action.type) {
         case POST_ORDER_REQUEST: {
             return {
@@ -44,12 +47,7 @@ export const orderReducer = (state = orderState, action)=> {
         case REMOVE_ORDER_DETAILS: {
             return {
                 ...state,
-                orderDetails: {
-                    name: '',
-                    order: {
-                        number: '',
-                    }
-                }
+                orderDetails: null
             }
         }
         default: {

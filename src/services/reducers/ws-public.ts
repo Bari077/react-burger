@@ -2,16 +2,25 @@ import {
     WS_CONNECTION_SUCCESS,
     WS_CONNECTION_ERROR,
     WS_CONNECTION_CLOSED,
-    WS_CONNECTION_ORDERS
+    WS_CONNECTION_ORDERS,
+    TWsConnectionActions
 } from "../actions/ws-public";
 
-const wsPublicState = {
+import { TWsOrders } from "../types/data";
+
+type TWsPublicState = {
+    wsConnected: boolean;
+    wsError: boolean;
+    publicOrders: TWsOrders | null
+}
+
+const wsPublicState: TWsPublicState = {
     wsConnected: false,
     wsError: false,
     publicOrders: null
 }
 
-export const wsPublicReducer = (state = wsPublicState, action)=> {
+export const wsPublicReducer = (state = wsPublicState, action: TWsConnectionActions): TWsPublicState => {
     switch(action.type) {
         case WS_CONNECTION_SUCCESS:
             return {

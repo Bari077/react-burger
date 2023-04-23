@@ -2,7 +2,7 @@ import formStyle from './Forms.module.css';
 import { useState, useRef } from "react";
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
-import { forgotPassword } from '../../services/actions/auth';
+import { forgotPassword } from '../../services/auth';
 import { useDispatch } from 'react-redux';
 
 

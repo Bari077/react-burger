@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -6,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import appHeaderStyle from './App-Header.module.css';
 
-function AppHeader() {    
+const AppHeader: FC=()=> {    
     
     const { pathname } = useLocation();
     const textClass = 'text text_type_main-default pl-2';    
@@ -41,6 +42,5 @@ function AppHeader() {
         </header>
     )
 }
-
 
 export default AppHeader;

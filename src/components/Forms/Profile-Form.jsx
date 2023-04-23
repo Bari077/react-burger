@@ -1,7 +1,7 @@
 import formStyle from './Forms.module.css';
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
-import { updateUser, getUserInfo } from "../../services/actions/auth";
+import { updateUser } from '../../services/auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { isValidForm, isValidInput } from '../../utils/validation';
 

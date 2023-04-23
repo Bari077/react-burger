@@ -8,7 +8,7 @@ import { ProfilePage } from '../../pages/profile/profile';
 import { ProtectedRouteElement } from '../Protected-Route/Protected-Route';
 import { IngredientPage } from '../../pages/ingredient/ingredient';
 import { Preloader } from '../Preloader/Preloader';
-import { getUserInfo } from '../../services/actions/auth';
+import { getUserInfo } from '../../services/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { ProfileForm } from '../Forms/Profile-Form';

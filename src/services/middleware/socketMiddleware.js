@@ -1,5 +1,6 @@
 import { WS_PRIVATE_START } from "../actions/ws-private";
 
+
 export const socketMiddleware = (wsUrl, wsActions) => {
   return store => {
     let socket = null;
@@ -7,7 +8,7 @@ export const socketMiddleware = (wsUrl, wsActions) => {
     return next => action => {
       const { dispatch } = store;
       const { type } = action;
-      const { wsInit, onOpen, onClose, onError, onMessage, wsClose } = wsActions;
+      const { wsInit, onOpen, onClose, onError, onMessage } = wsActions;
       
       if (type === wsInit) {
         socket = type === WS_PRIVATE_START ? 

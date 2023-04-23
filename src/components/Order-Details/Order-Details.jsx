@@ -3,7 +3,7 @@ import doneImg from '../../images/done.svg';
 import { useSelector } from 'react-redux';
 
 const OrderDetails =()=> {
-    const orderNumber = useSelector(state=> state.orderReducer.orderDetails.order.number); 
+    const orderNumber = useSelector(state=> state.orderReducer.orderDetails?.order?.number); 
     const orderRequest = useSelector(state=> state.orderReducer.orderRequest);
     const orderFailed = useSelector(state=> state.orderReducer.orderFailed);
       
