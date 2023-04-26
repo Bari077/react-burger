@@ -10,7 +10,7 @@ import {
 import { TIngredientDetails } from "../types/data";
 
 type TConstructorState = {
-    constructorItems: ReadonlyArray<TIngredientDetails>;
+    constructorItems: Array<TIngredientDetails>;
     bun: TIngredientDetails | null
 }
 

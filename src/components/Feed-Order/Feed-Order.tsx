@@ -1,8 +1,14 @@
 import { CurrencyIcon, FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components";
 import feedOrderStyle  from './Feed-Order.module.css';
-import { useMemo } from "react";
+import { useMemo, FC } from "react";
+import { TFeedOrder, TIngredientDetails } from "../../services/types/data";
 
-export const FeedOrder =({order, ingredients})=> {
+interface IFeedOrderProps {
+    order: TFeedOrder;
+    ingredients: Array<TIngredientDetails & { count: number}>
+}
+
+export const FeedOrder: FC<IFeedOrderProps> =({order, ingredients})=> {
     const { createdAt, name, number, status } = order;
     const orderTotal = useMemo(
         ()=>

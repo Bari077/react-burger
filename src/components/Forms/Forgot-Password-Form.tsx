@@ -1,22 +1,22 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef } from "react";
+import { useState, useRef, FC, FormEventHandler } from "react";
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../../services/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/hooks';
 
 
-export const ForgotPasswordForm =()=> {    
+export const ForgotPasswordForm: FC =()=> {    
 
     const [value, setValue] = useState('');
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     
     const mail = { "email": value }; 
 
-    const handleSubmit =(evt)=> { 
+    const handleSubmit: FormEventHandler<HTMLFormElement> =(evt)=> { 
         evt.preventDefault();       
         dispatch(forgotPassword(mail, {onSuccess: ()=>navigate('/reset-password', {state:{from: '/forgot-password'}})}));                                                                   
     }

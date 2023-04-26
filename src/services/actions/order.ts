@@ -3,6 +3,7 @@ import { getCookie } from "../../utils/utils";
 import { resetConstructorAction } from "./constructor";
 import { TOrderDetails } from "../types/data";
 import { AppDispatch } from "../types";
+import { AppThunk } from "../types";
 
 export const POST_ORDER_REQUEST: 'POST_ORDER_REQUEST' = 'POST_ORDER_REQUEST';
 export const POST_ORDER_SUCCESS: 'POST_ORDER_SUCCESS' = 'POST_ORDER_SUCCESS';
@@ -46,15 +47,11 @@ const postOrderSuccessAction = (orderDetails: TOrderDetails): IPostOrderSuccessA
 });
 
 
-export function sendOrder(orderList: ReadonlyArray<string>) {     
-    console.log(orderList)
-    const order = {
-        "ingredients" : orderList    
-    };
-    const accessToken =  getCookie('accessToken');   
+export const sendOrder: AppThunk =(orderList: Array<string>)=> { 
+       
     return function(dispatch: AppDispatch) {
         dispatch(postOrderAction());
-        postOrder(order, accessToken)
+        postOrder(orderList, getCookie('accessToken'))
         .then(data => {
             dispatch(postOrderSuccessAction({...data}));
             dispatch(resetConstructorAction());

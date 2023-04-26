@@ -18,6 +18,8 @@ export type TIngredientDetails = {
     readonly __v: number;
 }
 
+
+
 export type TOrderStatus = 'done'|'pending'|'created'; 
 
 export type TOrder = {
@@ -35,6 +37,10 @@ export type TOrder = {
     readonly updatedAt: string;
 }
 
+export type TFeedOrder = Omit<TOrder, 'ingredients'|'owner'|'price'> & {
+    readonly ingredients: ReadonlyArray<string>
+}
+
 export type TOrderDetails = {
     readonly name: string;
     readonly order: TOrder;
@@ -42,7 +48,7 @@ export type TOrderDetails = {
 }
 
 export type TWsOrders = {
-    readonly orders: Array<TOrder>;
+    readonly orders: Array<TFeedOrder>;
     readonly success: boolean;
     readonly total: number;
     readonly totalToday: number;

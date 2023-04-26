@@ -6,17 +6,18 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerStyle from './Burger-Constructor.module.css';
 import Modal from '../Modal/Modal';
 import OrderDetails from '../Order-Details/Order-Details';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/hooks';
 import { sendOrder, REMOVE_ORDER_DETAILS } from '../../services/actions/order';
 import { addItem } from '../../services/actions/constructor';
 import { useDrop } from 'react-dnd';
 import { useNavigate } from 'react-router-dom';
+import { TIngredientDetails } from '../../services/types/data';
 
 
 
-const BurgerConstructor =()=> {     
+const BurgerConstructor : FC =()=> {     
     
-    const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowModal, setIsShowModal] = useState({visible: false});
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const constructorIngredients = useSelector(state=> state.constructorReducer.constructorItems);
@@ -39,13 +40,12 @@ const BurgerConstructor =()=> {
 
     const [{ isHover }, dropTarget] = useDrop({
         accept: 'ingredient',
-        collect: monitor => ({            
+        drop(item: TIngredientDetails) {
+            dispatch(addItem(item));                                    
+        },
+        collect: monitor  => ({            
             isHover: monitor.getItemType() !==bun ? monitor.isOver() : null,
-        }),
-        drop(item) {
-            console.log(item)
-            dispatch(addItem(item.ingredient));                                    
-        }                             
+        }),                                     
     })
     
     const totalPrice = useMemo(() => {
@@ -66,7 +66,7 @@ const BurgerConstructor =()=> {
         if(!userInfo) {            
             navigate('login', {state: {from: '/'}})
         } else {
-            const orderList = [bun._id, ...constructorIngredients.map(ingredient => ingredient._id), bun._id] 
+            const orderList = [bun?._id, ...constructorIngredients.map(ingredient => ingredient._id), bun?._id]; 
             dispatch(sendOrder(orderList));
             if(!orderRequest || !orderFailed) {
             handleOpenModal();                                   
@@ -87,7 +87,7 @@ const BurgerConstructor =()=> {
         <section className={burgerStyle.section}>
             <div className={burgerStyle.container} ref={dropTarget}>
                 <div className="pl-8 pb-4">
-                    {bun && bun.length !== 0 ? 
+                    {bun  ? 
                     (
                         <ConstructorElement
                         type="top"
@@ -108,7 +108,7 @@ const BurgerConstructor =()=> {
                     ))}
                 </ul>                
                 <div className="pt-4 pl-8">
-                        {bun && bun.length !== 0 && 
+                        {bun &&
                         <ConstructorElement
                         type="bottom"
                         isLocked={true}

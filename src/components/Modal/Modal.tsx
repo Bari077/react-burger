@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { FC, MouseEventHandler, ReactNode } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import modalStyle from './Modal.module.css';
 import ModalOverlay from '../Modal-Overlay/Modal-Overlay';
 
 
-const Modal = ({onClose, ...props})=> {
-    const modalRoot = document.getElementById('react-modals');
+interface IModalProps {
+    children: ReactNode;
+    onClose: ()=> void;
+}
 
-    const handleOverlayClose =(e)=> {
+const Modal: FC<IModalProps> = ({onClose, ...props})=> {
+    const modalRoot = document.getElementById('react-modals') as HTMLElement;
+
+    const handleOverlayClose: MouseEventHandler<HTMLDivElement> =(e)=> {
        e.stopPropagation();
        e.currentTarget && onClose();
     }
 
-    const handleEscClose = React.useCallback((e)=> {
+    const handleEscClose = React.useCallback((e: KeyboardEvent)=> {
         e.key === 'Escape' && onClose();
         console.log(e.key)
     },
@@ -29,7 +33,7 @@ const Modal = ({onClose, ...props})=> {
 
     return ReactDOM.createPortal(
         (<div className={modalStyle.modal}>
-            <ModalOverlay onClose={handleOverlayClose}/>
+            <ModalOverlay onClick={handleOverlayClose}/>
             <div className={modalStyle.container}>
                 {props.children}
                 <button className={modalStyle.close} type="button" onClick={onClose}></button>
@@ -37,11 +41,6 @@ const Modal = ({onClose, ...props})=> {
         </div>),
         modalRoot
     );
-}
-
-Modal.propTypes = {
-    children: PropTypes.node.isRequired,
-    onClose: PropTypes.func.isRequired,
 }
 
 export default Modal;

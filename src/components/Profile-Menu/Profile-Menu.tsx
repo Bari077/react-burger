@@ -3,10 +3,11 @@ import { NavLink } from '../Nav-Link/Nav-Link';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { signOut } from '../../services/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../services/hooks';
+import { FC } from "react";
 
 
-export const ProfileMenu=()=> {
+export const ProfileMenu: FC =()=> {
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const { pathname } = useLocation();

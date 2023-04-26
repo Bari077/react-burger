@@ -1,11 +1,19 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState,
+useRef,
+useEffect, 
+useMemo, 
+FC, 
+ChangeEvent, 
+RefObject,
+FormEventHandler } from "react";
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { updateUser } from '../../services/auth';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/hooks';
 import { isValidForm, isValidInput } from '../../utils/validation';
 
-export const ProfileForm =()=> {    
+
+export const ProfileForm: FC =()=> {    
     
     const userInfo = useSelector(state=> state.authReducer.user);
     const dispatch = useDispatch();
@@ -34,10 +42,12 @@ export const ProfileForm =()=> {
     const [isValid, setIsValid] = useState({
         name: false,
         login: false,
-        password: false,                
+        password: false, 
     });    
 
-    const onChange =(e)=> {
+   
+    
+    const onChange =(e: ChangeEvent<HTMLInputElement>)=> {
         const target = e.target;
         setValues({
             ...values,
@@ -46,26 +56,26 @@ export const ProfileForm =()=> {
         setIsValid({
             ...isValid,
             [target.name] : !isValidInput(target.name, target.value)                       
-        })        
+        })               
     }
     
-    const nameRef = useRef(null);
-    const loginRef = useRef(null);
+    const nameRef = useRef<HTMLInputElement>(null);
+    const loginRef = useRef<HTMLInputElement>(null);
 
-    const onEditClick = (ref) => {
-        setTimeout(() => ref.current.focus(), 0);
-        ref.current.removeAttribute('disabled');
-        ref.current.classList.remove('input__textfield-disabled')                       
+    const onEditClick = (ref: RefObject<HTMLInputElement>) => {
+        setTimeout(() => ref.current?.focus(), 0);
+        ref.current?.removeAttribute('disabled');
+        ref.current?.classList.remove('input__textfield-disabled')                       
     };      
     
     
     const setInactive =()=> {
-        if(userInfo.name === nameRef.current.value) {
-            nameRef.current.setAttribute('disabled', true);
-            nameRef.current.classList.add('input__textfield-disabled');
-        } if(userInfo.email === loginRef.current.value) {
-            loginRef.current.setAttribute('disabled', true);
-            loginRef.current.classList.add('input__textfield-disabled');
+        if(userInfo?.name === nameRef.current?.value) {
+            nameRef.current?.setAttribute('disabled', 'true');
+            nameRef.current?.classList.add('input__textfield-disabled');
+        } if(userInfo?.email === loginRef.current?.value) {
+            loginRef.current?.setAttribute('disabled', 'true');
+            loginRef.current?.classList.add('input__textfield-disabled');
         }        
     }
 
@@ -77,7 +87,7 @@ export const ProfileForm =()=> {
     
     
 
-    const handleSubmit =(evt)=> {
+    const handleSubmit: FormEventHandler<HTMLFormElement> =(evt)=> {
         const form = values.password.length ? {
             "name" : values.name,
             "email" : values.login,
@@ -88,23 +98,23 @@ export const ProfileForm =()=> {
         }
         evt.preventDefault();       
         dispatch(updateUser(form));
-        nameRef.current.setAttribute('disabled', true);
-        nameRef.current.classList.add('input__textfield-disabled');
-        loginRef.current.setAttribute('disabled', true);
-        loginRef.current.classList.add('input__textfield-disabled');
+        nameRef.current?.setAttribute('disabled', 'true');
+        nameRef.current?.classList.add('input__textfield-disabled');
+        loginRef.current?.setAttribute('disabled', 'true');
+        loginRef.current?.classList.add('input__textfield-disabled');
     }
 
     const handleCancel =()=> {
-        setValues({
+        userInfo && setValues({
             ...values,
             name : userInfo.name,
             login : userInfo.email,
             password: ''
         })
-        nameRef.current.setAttribute('disabled', true);
-        nameRef.current.classList.add('input__textfield-disabled');
-        loginRef.current.setAttribute('disabled', true);
-        loginRef.current.classList.add('input__textfield-disabled');
+        nameRef.current?.setAttribute('disabled', 'true');
+        nameRef.current?.classList.add('input__textfield-disabled');
+        loginRef.current?.setAttribute('disabled', 'true');
+        loginRef.current?.classList.add('input__textfield-disabled');
     }
     
 
@@ -147,8 +157,7 @@ export const ProfileForm =()=> {
                 value={values.password}
                 name={'password'}
                 icon="EditIcon"
-                extraClass="mb-6"
-                error={isValid.password}                
+                extraClass="mb-6"                                                
             />
             {hasChanges ?
             (<div className={formStyle.buttonContainer}>

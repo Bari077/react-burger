@@ -1,21 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, FC } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Ingredient } from '../Ingredient/Ingredient';
 import burgerIngredientsStyle from './Burger-Ingredients.module.css';
 import Modal from '../Modal/Modal';
 import IngredientDetails from '../Ingredient-Details/Ingredient-Details';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/hooks';
 import { setCurrentItem, REMOVE_INGREDIENT_DETAILS  } from '../../services/actions/ingredient-modal';
+import { TIngredientDetails } from '../../services/types/data';
 
 
 
 
-const BurgerIngredients =()=> {
+const BurgerIngredients: FC =()=> {
     const ingredients = useSelector(state => state.ingredientsReducer.items);
     const dispatch = useDispatch();     
-    const [current, setCurrent] = React.useState('one');
-    const [isShowModal, setIsShowModal] = React.useState(false);
-    const currentIngredient = JSON.parse(sessionStorage.getItem('currentIngredient'))
+    const [current, setCurrent] = useState('one');
+    const [isShowModal, setIsShowModal] = useState({ visible: false });
+    const currentIngredient = JSON.parse(sessionStorage.getItem('currentIngredient') || 'false')
     
     useEffect(()=> {
         if(currentIngredient) {
@@ -26,7 +27,7 @@ const BurgerIngredients =()=> {
     },[])
     
     
-    const handleOpenModal =(item)=> {
+    const handleOpenModal =(item: TIngredientDetails)=> {
         window.history.replaceState(null, "", `ingredients/${item._id}`);
         setIsShowModal({ visible: true });
         sessionStorage.setItem('currentIngredient', JSON.stringify(item));
@@ -41,21 +42,24 @@ const BurgerIngredients =()=> {
     }
     
 
-    const containerPosition = useRef();
-    const bunPosition = useRef();
-    const saucePosition = useRef();
-    const mainPosition = useRef();
+    const containerPosition = useRef<HTMLElement>(null);
+    const bunPosition = useRef<HTMLHeadingElement>(null);
+    const saucePosition = useRef<HTMLHeadingElement>(null);
+    const mainPosition = useRef<HTMLHeadingElement>(null);
 
-    const handleScroll =()=> {        
-        const sauceSpace = containerPosition.current.getBoundingClientRect().top - saucePosition.current.getBoundingClientRect().top;
-        const mainSpace = containerPosition.current.getBoundingClientRect().top - mainPosition.current.getBoundingClientRect().top;
-        if(0 < sauceSpace && mainSpace < 0) {
-            setCurrent('two')
-        } else if (mainSpace > 0) {
-            setCurrent('three');
-        } else {
-            setCurrent('one');
-        }      
+    const handleScroll =()=> { 
+        if(containerPosition.current !== null && saucePosition.current !== null && mainPosition.current !== null) {
+            const sauceSpace = containerPosition.current.getBoundingClientRect().top - saucePosition.current.getBoundingClientRect().top;
+            const mainSpace = containerPosition.current.getBoundingClientRect().top - mainPosition.current.getBoundingClientRect().top;
+            if(0 < sauceSpace && mainSpace < 0) {
+                setCurrent('two')
+            } else if (mainSpace > 0) {
+                setCurrent('three');
+            } else {
+                setCurrent('one');
+            }
+        }       
+              
     }
 
     useEffect(() => {        
@@ -67,7 +71,7 @@ const BurgerIngredients =()=> {
 
     const modal = (
         <Modal onClose={handleCloseModal} > 
-           <IngredientDetails />
+           <IngredientDetails data = {null}/>
         </Modal>
     );     
     

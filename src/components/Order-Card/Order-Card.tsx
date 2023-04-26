@@ -1,23 +1,28 @@
 import cardStyle from './Order-Card.module.css';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
+import { useSelector } from '../../services/hooks';
+import { useMemo, useState, FC } from 'react';
 import Modal from '../Modal/Modal';
 import { useLocation } from 'react-router-dom';
 import { FeedOrder } from '../Feed-Order/Feed-Order';
+import { TFeedOrder, TIngredientDetails } from '../../services/types/data';
 
-export const OrderCard = ({order})=> {
+interface IOrderCardProps {
+    order: TFeedOrder
+}
 
+export const OrderCard: FC<IOrderCardProps> = ({order})=> {
+    
     const {pathname} = useLocation();
     const { createdAt, ingredients, name, number, status } = order;    
     const ingredientsList = useSelector(state=> state.ingredientsReducer.items);
     const orderIngredients = useMemo(() => {
-        const orderIngredientsList = ingredients.reduce((arr, ingredient) => {
+        const orderIngredientsList = ingredients.reduce((arr: Array<TIngredientDetails>, ingredient) => {
           const isIngredient = ingredientsList.find((ingredientToFind) => ingredientToFind._id === ingredient);
           return isIngredient ? [...arr, isIngredient] : arr;
         }, []);
         
-        const ingredientsCount = orderIngredientsList.reduce((arr, ingredient) => {
+        const ingredientsCount = orderIngredientsList.reduce((arr: Array<TIngredientDetails & {count : number}>, ingredient) => {            
             let currentIngredient = arr.find(
               (arrIngrredient) => arrIngrredient._id === ingredient._id
             );
@@ -49,7 +54,7 @@ export const OrderCard = ({order})=> {
         created: 'Создан'
     }
     
-    const [isShowModal, setIsShowModal] = useState(false);    
+    const [isShowModal, setIsShowModal] = useState({ visible: false });    
     
     const handleOpenModal =()=> {
         if(pathname === '/feed') {

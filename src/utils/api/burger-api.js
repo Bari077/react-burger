@@ -13,7 +13,8 @@ export const postOrder =(order, accessToken)=> {
             'Content-type': 'application/json',
             authorization : accessToken
         },
-        body: JSON.stringify(order)
+        body: JSON.stringify({
+            ingredients: order})
     })
 }
 

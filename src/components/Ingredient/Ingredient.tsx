@@ -1,18 +1,22 @@
-import { useMemo } from "react";
-import PropTypes from 'prop-types';
-import { ingredientsPropTypes } from "../../utils/utils";
+import { useMemo, FC } from "react";
+import { useSelector } from "../../services/hooks";
 import { useDrag } from "react-dnd";
-import { useSelector} from 'react-redux';
 import ingredientStyle from './Ingredient.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import { TIngredientDetails } from "../../services/types/data";
 
 
+interface IIngredientProps {
+    ingredient: TIngredientDetails;
+    handleOpenModal: (item: TIngredientDetails) => void
+}
 
-export const Ingredient =({ingredient, handleOpenModal})=> {    
+export const Ingredient: FC<IIngredientProps> =({ingredient, handleOpenModal})=> {
+        
     const [{opacity}, dragRef] = useDrag({
         type: 'ingredient',
-        item: {ingredient},
+        item: ingredient,
         collect: monitor=> ({
             opacity: monitor.isDragging() ? 0.3 : 1
           })
@@ -42,7 +46,3 @@ export const Ingredient =({ingredient, handleOpenModal})=> {
     )
 }
 
-Ingredient.propTypes = {
-    handleOpenModal : PropTypes.func.isRequired,
-    ingredient : ingredientsPropTypes
-}

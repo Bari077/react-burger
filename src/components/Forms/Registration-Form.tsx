@@ -1,6 +1,6 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useRef, FC, ChangeEvent, FormEventHandler } from "react";
+import { useSelector, useDispatch } from '../../services/hooks';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate, } from 'react-router-dom';
 import { RESET_ERROR_STATUS } from '../../services/actions/user';
@@ -9,16 +9,16 @@ import { Notification } from '../Notification/Notification';
 
 
 
-export const RegistrationForm =()=> {
+export const RegistrationForm: FC =()=> {
 
     
     const isError = useSelector(state=> state.authReducer.isError);
     const [mailValue, setMailValue] = useState('');
-    const inputMailRef = useRef(null);
+    const inputMailRef = useRef<HTMLInputElement>(null);
     const [nameValue, setNamelValue] = useState('');
-    const inputNameRef = useRef(null);
+    const inputNameRef = useRef<HTMLInputElement>(null);
     const [passwordValue, setPasswordValue] = useState('')
-    const onChange = e => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>)=> {
         setPasswordValue(e.target.value)
     }
 
@@ -34,7 +34,7 @@ export const RegistrationForm =()=> {
     const note = (<Notification onClose={()=> dispatch({type : RESET_ERROR_STATUS})}>Ошибка регистрации</Notification>)      
    
 
-    const handleSubmit =(evt)=> { 
+    const handleSubmit: FormEventHandler<HTMLFormElement> =(evt)=> { 
         evt.preventDefault();       
         dispatch(registerUser(form, {onSuccess: () => navigate('/login'), onError: () => handleError()}));                                                                   
     }

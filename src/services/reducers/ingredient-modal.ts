@@ -10,7 +10,7 @@ type TIngredientModalState = {
     ingredientDetails: TIngredientDetails | null
 }
 
-const ingredientModalState = {
+const ingredientModalState: TIngredientModalState = {
     ingredientDetails: null,
 }
 

@@ -1,23 +1,21 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useRef, FC, ChangeEvent, FormEventHandler } from "react";
+import { useSelector, useDispatch } from '../../services/hooks';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
 import { RESET_ERROR_STATUS, RESET_SUCCESS_STATUS } from '../../services/actions/user';
 import { Notification } from '../Notification/Notification';
 import { resetPassword } from '../../services/auth';
 
-export const ResetPasswordForm =()=> {
+export const ResetPasswordForm: FC =()=> {
 
     const isError = useSelector(state=> state.authReducer.isError);
     const isSuccess = useSelector(state=> state.authReducer.isSuccess);
-    /*const [isShowNote, setIsShowNote] = useState(false);
-    const [isShowError, setIsShowError] = useState(false);*/
 
     const [mailKeyValue, setMailKeyValue] = useState('');
-    const inputMailKeyRef = useRef(null);
+    const inputMailKeyRef = useRef<HTMLInputElement>(null);
     const [passwordValue, setPasswordValue] = useState('')
-    const onChange = e => {
+    const onChange = (e: ChangeEvent<HTMLInputElement> )=> {
         setPasswordValue(e.target.value)
     }
 
@@ -33,7 +31,7 @@ export const ResetPasswordForm =()=> {
     const errorNote = (<Notification onClose={()=> dispatch({type: RESET_ERROR_STATUS})}>Не удалось изменить пароль. Проверьте, правильно ли указан код из почты. </Notification>);
 
 
-    const handleSubmit =(evt)=> { 
+    const handleSubmit: FormEventHandler<HTMLFormElement> =(evt)=> { 
         evt.preventDefault();       
         dispatch(resetPassword(form, {onSuccess: ()=> handleSuccess(), onError: () => handleError()}));                                                                   
     }

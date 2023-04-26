@@ -25,7 +25,7 @@ export interface IDeleteConstructorItemAction {
 
 export interface ISortConstructorAction {
     readonly type: typeof SORT_CONSTRUCTOR;
-    readonly constructorItems: ReadonlyArray<TIngredientDetails>
+    readonly constructorItems: Array<TIngredientDetails>
 }
 
 export interface IResetConstructorAction {
@@ -49,7 +49,7 @@ const addConstructorBunAction =(bun: TIngredientDetails): IAddConstructorBunActi
     bun 
 })
 
-const sortConstructorAction =(constructorItems: ReadonlyArray<TIngredientDetails>): ISortConstructorAction => ({
+const sortConstructorAction =(constructorItems: Array<TIngredientDetails>): ISortConstructorAction => ({
     type: SORT_CONSTRUCTOR,
     constructorItems
 })

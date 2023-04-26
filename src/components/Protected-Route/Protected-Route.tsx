@@ -1,8 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import PropTypes from 'prop-types';
+import { useSelector } from "../../services/hooks";
+import { FC } from "react";
 
-export const ProtectedRouteElement = ({element})=> {    
+interface IProtectedElement {
+    element: JSX.Element
+}
+
+export const ProtectedRouteElement: FC<IProtectedElement> = ({element})=> {    
     
     const isUserLoaded = useSelector(state=> state.authReducer.isUserLoaded);
     const userInfo = useSelector(state=> state.authReducer.user);
@@ -17,8 +21,4 @@ export const ProtectedRouteElement = ({element})=> {
     return userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>;
      
     
-}
-
-ProtectedRouteElement.propTypes = {
-    element: PropTypes.node
 }

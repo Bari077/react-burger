@@ -1,8 +1,10 @@
+import { FC } from 'react';
 import orderStyle from './Order-Details.module.css';
 import doneImg from '../../images/done.svg';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks';
 
-const OrderDetails =()=> {
+
+const OrderDetails: FC =()=> {
     const orderNumber = useSelector(state=> state.orderReducer.orderDetails?.order?.number); 
     const orderRequest = useSelector(state=> state.orderReducer.orderRequest);
     const orderFailed = useSelector(state=> state.orderReducer.orderFailed);

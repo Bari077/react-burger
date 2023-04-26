@@ -1,6 +1,6 @@
 import formStyle from './Forms.module.css';
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useRef, FC, FormEventHandler, ChangeEvent } from "react";
+import { useSelector, useDispatch } from '../../services/hooks';
 import { Input, PasswordInput, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from 'react-router-dom';
 import { RESET_ERROR_STATUS } from '../../services/actions/user';
@@ -8,7 +8,7 @@ import { signIn } from '../../services/auth';
 import { Notification } from '../Notification/Notification';
 import { useLocation } from 'react-router-dom';
 
-export const LoginForm =()=> {
+export const LoginForm: FC =()=> {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export const LoginForm =()=> {
     const note = (<Notification onClose={()=> dispatch({type: RESET_ERROR_STATUS})}>Не удается войти, проверьте верно ли указаны почта и пароль </Notification>)  
 
     const [mailValue, setMailValue] = useState('');
-    const inputMailRef = useRef(null);
+    const inputMailRef = useRef<HTMLInputElement>(null);
 
     const [passwordValue, setPasswordValue] = useState('')    
     
@@ -29,11 +29,11 @@ export const LoginForm =()=> {
         "password": passwordValue, 
     };      
     
-    const onChange = e => {
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPasswordValue(e.target.value)
     }    
 
-    const handleSubmit =(evt)=> { 
+    const handleSubmit: FormEventHandler<HTMLFormElement> =(evt)=> { 
         evt.preventDefault();       
         dispatch(signIn(form, {onSuccess: () => navigate(location.state ? redirect : '/'), onError: () => handleError()}));                                                                   
     }
