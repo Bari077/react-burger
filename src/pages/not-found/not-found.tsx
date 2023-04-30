@@ -1,7 +1,7 @@
 import AppHeader from "../../components/App-Header/App-Header";
 
 
-export const NotFound404 =()=> {
+export const NotFound404 =(): JSX.Element => {
     return (
         <div className="App">
             <AppHeader />

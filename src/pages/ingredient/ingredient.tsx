@@ -1,12 +1,12 @@
 import AppHeader from '../../components/App-Header/App-Header';
 import IngredientDetails from '../../components/Ingredient-Details/Ingredient-Details';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/hooks';
 import { getItems } from '../../services/actions/ingredients';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './ingredient.module.css';
 import { Navigate, useParams } from 'react-router-dom';
 
-export function IngredientPage() {
+export function IngredientPage(): JSX.Element {
     
     const dispatch = useDispatch();
     const ingredients = useSelector(state => state.ingredientsReducer.items);
@@ -18,8 +18,10 @@ export function IngredientPage() {
     },[])
     
     const ingredient = ingredients.find(item=> item._id === id)
+
+    const ingredientInStorage = JSON.parse(sessionStorage.getItem('currentIngredient') || 'false') 
        
-    if(JSON.parse(sessionStorage.getItem('currentIngredient'))) {
+    if(ingredientInStorage) {
         return <Navigate to="/" replace/>
     }
 

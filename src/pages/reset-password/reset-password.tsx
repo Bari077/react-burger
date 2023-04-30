@@ -1,9 +1,9 @@
 import AppHeader from '../../components/App-Header/App-Header';
 import { ResetPasswordForm } from '../../components/Forms/Reset-Password-Form';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks';
 import { Navigate, useLocation } from 'react-router-dom';
 
-export function ResetPasswordPage() {
+export function ResetPasswordPage(): JSX.Element {
     const userInfo = useSelector(state=> state.authReducer.user);    
     const location = useLocation();    
     

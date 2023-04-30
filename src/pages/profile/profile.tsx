@@ -4,7 +4,7 @@ import { ProfileMenu } from '../../components/Profile-Menu/Profile-Menu';
 import style from './profile.module.css'
 
 
-export function ProfilePage() { 
+export function ProfilePage(): JSX.Element { 
     
 
     return (

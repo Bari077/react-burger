@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks';
 import AppHeader from '../../components/App-Header/App-Header';
 import BurgerIngredients from '../../components/Burger-Ingrdients/Burger-Ingredients';
 import BurgerConstructor from '../../components/Burger-Constructor/Burger-Constructor';
@@ -6,7 +6,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 
-export function HomePage() {
+export function HomePage() : JSX.Element {
     const itemsRequest = useSelector(state => state.ingredientsReducer.itemsRequest);
     const itemsFailed = useSelector(state => state.ingredientsReducer.itemsFailed);
 

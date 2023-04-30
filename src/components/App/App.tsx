@@ -9,8 +9,8 @@ import { ProtectedRouteElement } from '../Protected-Route/Protected-Route';
 import { IngredientPage } from '../../pages/ingredient/ingredient';
 import { Preloader } from '../Preloader/Preloader';
 import { getUserInfo } from '../../services/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useSelector, useDispatch } from '../../services/hooks';
+import { FC, useEffect } from 'react';
 import { ProfileForm } from '../Forms/Profile-Form';
 import { OrderList } from '../Order-List/Order-List';
 import { FeedPage } from '../../pages/feed/feed';
@@ -20,7 +20,7 @@ import { NotFound404 } from '../../pages/not-found/not-found';
 
 
 
-const App =()=> {
+const App: FC =()=> {
   const itemsRequest = useSelector(state => state.ingredientsReducer.itemsRequest);
   const userRequest = useSelector(state=> state.authReducer.userRequest);
   const dispatch = useDispatch(); 

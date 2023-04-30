@@ -1,19 +1,21 @@
 import AppHeader from '../../components/App-Header/App-Header';
+import orderPageStyle from './order.module.css'
 import { FeedOrder } from '../../components/Feed-Order/Feed-Order';
 import { useParams, useLocation } from 'react-router-dom';
 import { startWsConnection, closeWsConnection } from '../../services/actions/ws-public';
 import { startPrivateWsConnection, closePrivateWsConnection } from '../../services/actions/ws-private';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from '../../services/hooks';
+import { useEffect, useMemo, FC } from 'react';
 import { getCookie } from '../../utils/utils';
+import { TIngredientDetails } from '../../services/types/data';
 
-export const OrderPage =()=> {
+export const OrderPage: FC =(): JSX.Element => {
     const {pathname} = useLocation();
     const {id} = useParams();
     const dispatch = useDispatch();
-    const token = getCookie('accessToken').split('Bearer ')[1];
+    const token = getCookie('accessToken')?.split('Bearer ')[1];
     const handleWsConnection =()=> {
-      pathname.startsWith('/profile/orders')?
+      token && pathname.startsWith('/profile/orders')?
       dispatch(startPrivateWsConnection(token)) : dispatch(startWsConnection());
     } 
     const handleCloseWs =()=> {
@@ -41,12 +43,12 @@ export const OrderPage =()=> {
     
     const currentOrderIngredients = useMemo(() => {
         if(ingredients) {
-            const orderIngredientsList = ingredients.reduce((arr, ingredient) => {
+            const orderIngredientsList = ingredients.reduce((arr: Array<TIngredientDetails>, ingredient) => {
                 const isIngredient = ingredientsList.find((ingredientToFind) => ingredientToFind._id === ingredient);
                 return isIngredient ? [...arr, isIngredient] : arr;
               }, []);
               
-              const ingredientsCount = orderIngredientsList.reduce((arr, ingredient) => {
+              const ingredientsCount = orderIngredientsList.reduce((arr: Array<TIngredientDetails & {count : number}>, ingredient) => {
                   let currentIngredient = arr.find(
                     (arrIngrredient) => arrIngrredient._id === ingredient._id
                   );
@@ -68,12 +70,15 @@ export const OrderPage =()=> {
 
 
     return (
+      <>
         <div className="App">
             <AppHeader />
-            {currentOrder && ingredients &&
+            {currentOrderIngredients && ingredients &&
             <main className="main">                
               <FeedOrder order={currentOrder} ingredients={currentOrderIngredients}/>                             
             </main>}            
         </div>
+        {(wsError || wsPrivateError ) && <p className={`${orderPageStyle.error} text text_type_main-medium pt-20`}>Обновите страницу</p>}
+      </>        
     )
 }

@@ -1,9 +1,9 @@
 import AppHeader from '../../components/App-Header/App-Header';
 import { ForgotPasswordForm } from '../../components/Forms/Forgot-Password-Form';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/hooks';
 import { Navigate } from 'react-router-dom';
 
-export function ForgotPasswordPage() {
+export function ForgotPasswordPage(): JSX.Element {
     const userInfo = useSelector(state=> state.authReducer.user);
     
 
