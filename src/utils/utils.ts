@@ -1,5 +1,10 @@
 import { TRefreshTokenResponse } from "../services/types/api";
 
+type TCookieProps = {
+  path?: string
+  expires?: Date | string | number
+  [propName: string]: any
+}
 
 export const url = 'https://norma.nomoreparties.space/api/';
 export const wsUrl = 'wss://norma.nomoreparties.space/orders';
@@ -58,18 +63,21 @@ export const fetchWithRefresh = async (
   }    
 }
 
-export function setCookie(name: string, value: any, props: any) {
-    props = props || {};
+export function setCookie(name: string, value: string | null, props: TCookieProps) {
+    props = {path: '/',
+    ...props};
     let exp = props.expires;
     if (typeof exp == 'number' && exp) {
       const d = new Date();
       d.setTime(d.getTime() + exp * 1000);
       exp = props.expires = d;
     }
-    if (exp && exp.toUTCString) {
+    if (exp && exp instanceof Date && exp.toUTCString) {
       props.expires = exp.toUTCString();
     }
-    value = encodeURIComponent(value);
+    if(value) {
+      value = encodeURIComponent(value);
+    }    
     let updatedCookie = name + '=' + value;
     for (const propName in props) {
       updatedCookie += '; ' + propName;

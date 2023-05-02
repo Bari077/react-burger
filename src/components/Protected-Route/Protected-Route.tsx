@@ -1,6 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "../../services/hooks";
 import { FC } from "react";
+import { getUserInfo } from "../../services/auth";
+
 
 interface IProtectedElement {
     element: JSX.Element 

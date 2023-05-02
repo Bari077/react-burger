@@ -13,7 +13,7 @@ export const ProfileMenu: FC =()=> {
     const { pathname } = useLocation();
     const token = localStorage.getItem('refreshToken')
     const handleSignOut =()=> {
-        token && dispatch(signOut(token));
+        token && dispatch(signOut(token)) &&
         navigate(`/login`, {state:{from: '/profile'}})
     }
     

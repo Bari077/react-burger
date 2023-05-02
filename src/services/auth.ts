@@ -84,9 +84,9 @@ export function signOut(refreshToken: string) {
         logoutRequest(refreshToken)
         .then((res) => {
             if(res.success) {
-                dispatch(logoutSuccessAction());
+                dispatch(logoutSuccessAction())&&
                 localStorage.removeItem('refreshToken');
-                setCookie('accessToken', "", {'max-age' : -1});        
+                setCookie('accessToken', "", {'max-age' : -1, 'path' : '/'});        
             }           
         })
         .catch((err) => {
