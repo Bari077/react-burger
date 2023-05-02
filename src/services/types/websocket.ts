@@ -1,0 +1,7 @@
+export type TWsMiddlewareActions = {
+    wsInit: 'WS_CONNECTION_START' | 'WS_PRIVATE_START';
+    onOpen: 'WS_CONNECTION_SUCCESS' | 'WS_PRIVATE_SUCCESS';
+    onError: 'WS_CONNECTION_ERROR' | 'WS_PRIVATE_ERROR';
+    onClose: 'WS_CONNECTION_CLOSED' | 'WS_PRIVATE_CLOSED';
+    onMessage: 'WS_CONNECTION_ORDERS' | 'WS_PRIVATE_ORDERS';
+}

@@ -1,16 +1,17 @@
-import PropTypes from 'prop-types';
+import { TRefreshTokenResponse } from "../services/types/api";
+
 
 export const url = 'https://norma.nomoreparties.space/api/';
 export const wsUrl = 'wss://norma.nomoreparties.space/orders';
 
-export function checkResponse(response) {  
+export function checkResponse(response: Response) {  
     if(response.ok) {      
         return response.json()        
     }       
   return Promise.reject(`Что-то пошло не так: ${response.status}`);    
 }
 
-export async function refreshToken(refToken) {
+export async function refreshToken(refToken: string): Promise<TRefreshTokenResponse> {
   const response = await fetch(`${url}auth/token`, {
       method: 'POST',
       headers: {
@@ -19,35 +20,45 @@ export async function refreshToken(refToken) {
       body: JSON.stringify({ "token": refToken })
   })
   if (response.ok) {
-      localStorage.removeItem('refreshToken');
-      setCookie('accessToken', null, {'max-age' : -1});
-      return response;                                
+    localStorage.removeItem('refreshToken');
+    setCookie('accessToken', null, {'max-age' : -1});
+    return response.json()                                
   }
   return await Promise.reject(`Что-то пошло не так: ${response.status}`);
 }
 
-export const fetchWithRefresh = async (url, options)=> {
+export const fetchWithRefresh = async (
+  url: string, 
+  options: {
+    method: string;
+    headers: {
+        'Content-type': 'application/json';
+        authorization : string;
+    }
+    body?: string
+  })=> {
   const response = await fetch(url, options);
   if(response.ok) {
       const data = await response.json();
       return data
   } else {
-      const error = await response.json();        
-      if (error.message === 'jwt expired') {
-          refreshToken(localStorage.getItem('refreshToken')).then(checkResponse)
-          .then(res=> {              
-              options.headers.authorization = res.accessToken;
-              localStorage.setItem('refreshToken', res.refreshToken);
-              setCookie('accessToken', res.accessToken);
-              return fetch(url, options)                       
-          })
-          return                   
-      }           
-      return Promise.reject(error.message) 
+      const error = await response.json();
+      const token = localStorage.getItem('refreshToken');         
+      if(token && error.message === 'jwt expired') {
+        refreshToken(token)
+        .then(res=> {              
+          options.headers.authorization = res.accessToken;
+          localStorage.setItem('refreshToken', res.refreshToken);
+          setCookie('accessToken', res.accessToken, {});
+          return fetch(url, options)                                 
+        })                   
+      } else {
+        return error
+      } 
   }    
 }
 
-export function setCookie(name, value, props) {
+export function setCookie(name: string, value: any, props: any) {
     props = props || {};
     let exp = props.expires;
     if (typeof exp == 'number' && exp) {
@@ -70,39 +81,12 @@ export function setCookie(name, value, props) {
     document.cookie = updatedCookie;
 } 
 
-export function getCookie(name) {
+export function getCookie(name: string) {
     const matches = document.cookie.match(
       new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)')
     );
     return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-export const parseJwt = (token) => {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-};
 
 
-export const ingredientsPropTypes = PropTypes.shape({
-    _id: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
-    proteins: PropTypes.number,
-    fat: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    calories: PropTypes.number,
-    price: PropTypes.number,
-    image: PropTypes.string,
-    image_mobile: PropTypes.string,
-    image_large: PropTypes.string,
-    __v: PropTypes.number,   
-}).isRequired
-
-
-
-
-
-  

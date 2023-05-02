@@ -9,7 +9,7 @@ import { store } from './services/store';
 
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root')
+  document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>

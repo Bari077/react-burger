@@ -3,22 +3,22 @@ import { useSelector } from "../../services/hooks";
 import { FC } from "react";
 
 interface IProtectedElement {
-    element: JSX.Element
+    element: JSX.Element 
 }
 
 export const ProtectedRouteElement: FC<IProtectedElement> = ({element})=> {    
     
     const isUserLoaded = useSelector(state=> state.authReducer.isUserLoaded);
     const userInfo = useSelector(state=> state.authReducer.user);
-    const pathname = useLocation();
-
-
+    const pathname = useLocation();    
+  
     
-    if(!isUserLoaded) {
-        return null
-    }
-    
-    return userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>;
-     
+    return (
+        <>
+            {isUserLoaded &&
+            (userInfo ? element : <Navigate to="/login" state={{from: pathname}} replace/>)}
+        </>
+          
+    )      
     
 }

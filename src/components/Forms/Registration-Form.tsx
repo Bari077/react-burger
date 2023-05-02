@@ -39,7 +39,7 @@ export const RegistrationForm: FC =()=> {
         dispatch(registerUser(form, {onSuccess: () => navigate('/login'), onError: () => handleError()}));                                                                   
     }
    
-    const handleError = ()=> {        
+    const handleError:()=> void = ()=> {        
         setTimeout(()=> dispatch({type : RESET_ERROR_STATUS}), 3000);
     }
 

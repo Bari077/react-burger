@@ -1,9 +1,11 @@
 import { WS_PRIVATE_START } from "../actions/ws-private";
+import { AppDispatch, RootState } from "../types";
+import { TWsMiddlewareActions } from "../types/websocket";
+import { Middleware, MiddlewareAPI } from "redux";
 
-
-export const socketMiddleware = (wsUrl, wsActions) => {
-  return store => {
-    let socket = null;
+export const socketMiddleware = (wsUrl: string, wsActions: TWsMiddlewareActions): Middleware => {
+  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
+    let socket: WebSocket | null = null;
 
     return next => action => {
       const { dispatch } = store;

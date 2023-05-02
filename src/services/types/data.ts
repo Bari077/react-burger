@@ -3,6 +3,8 @@ export type TUser = {
     readonly name: string;
 }
 
+export type TAuthUser = TUser & {password: string};
+
 export type TIngredientDetails = {
     readonly _id: string;
     readonly name: string;

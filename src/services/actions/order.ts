@@ -48,10 +48,10 @@ const postOrderSuccessAction = (orderDetails: TOrderDetails): IPostOrderSuccessA
 
 
 export const sendOrder: AppThunk =(orderList: Array<string>)=> { 
-       
+    const accessToken = getCookie('accessToken');   
     return function(dispatch: AppDispatch) {
         dispatch(postOrderAction());
-        postOrder(orderList, getCookie('accessToken'))
+        accessToken && postOrder(orderList, accessToken)
         .then(data => {
             dispatch(postOrderSuccessAction({...data}));
             dispatch(resetConstructorAction());

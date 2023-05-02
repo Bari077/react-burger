@@ -27,15 +27,24 @@ getUserFinishedAction,
 updateUserAction,
 updateUserFailedAction,
 updateUserSuccessAction } from "./actions/user";
+import { TUser, TAuthUser } from "./types/data";
+import { AppDispatch, AppThunk } from "./types";
 
-export function registerUser(form, {onSuccess, onError}) {
-    return function(dispatch) {
+
+interface IErrorSuccessCallback {
+    onSuccess : ()=> void;
+    onError : ()=> void
+}
+
+export const registerUser =(form: TAuthUser,
+ {onSuccess, onError}: IErrorSuccessCallback )=> {
+    return function(dispatch: AppDispatch) {
         dispatch(registerUserAction());
         registerUserRequest(form)
         .then((res) => {
             if(res.success) {
                 dispatch(registerUserSuccessAction());
-                onSuccess();
+                onSuccess() 
             }                       
         })
         .catch((err) => {                                    
@@ -46,13 +55,14 @@ export function registerUser(form, {onSuccess, onError}) {
 }
 
 
-export function signIn(form, {onSuccess, onError}) {
-    return function(dispatch) {
+export const signIn =(form: Omit<TAuthUser, 'name'>,
+ {onSuccess, onError}: IErrorSuccessCallback)=> {
+    return function(dispatch: AppDispatch) {
         dispatch(loginAction());
         loginRequest(form)
         .then((res) => {
             if(res.success) {
-                setCookie('accessToken', res.accessToken);
+                setCookie('accessToken', res.accessToken, {});
                 localStorage.setItem('refreshToken', res.refreshToken);          
                 dispatch(loginSuccessAction({...res.user}));
                 onSuccess();
@@ -67,9 +77,9 @@ export function signIn(form, {onSuccess, onError}) {
 
 
 
-export function signOut(refreshToken) {
+export function signOut(refreshToken: string) {
 
-    return function(dispatch) {        
+    return function(dispatch: AppDispatch) {        
         dispatch(logoutAction());
         logoutRequest(refreshToken)
         .then((res) => {
@@ -85,8 +95,9 @@ export function signOut(refreshToken) {
     }
 }
 
-export function forgotPassword(mail,{ onSuccess}) {
-    return function(dispatch) {
+export function forgotPassword(mail: Omit<TUser, 'name'>,
+{onSuccess}: Omit<IErrorSuccessCallback, 'onError'>) {
+    return function(dispatch: AppDispatch) {
         dispatch(forgotPasswordAction());
         forgotPasswordRequest(mail)
         .then((res)=> {
@@ -101,8 +112,9 @@ export function forgotPassword(mail,{ onSuccess}) {
     }
 }
 
-export function resetPassword(form, {onSuccess, onError}) {
-    return function(dispatch) {
+export function resetPassword(form: Omit<TAuthUser, 'email' | 'name'> & { token: string},
+ {onSuccess, onError}: IErrorSuccessCallback) {
+    return function(dispatch: AppDispatch) {
         dispatch(resetPasswordAction());
         resetPasswordRequest(form)
         .then((res)=> {
@@ -117,32 +129,43 @@ export function resetPassword(form, {onSuccess, onError}) {
 }
 
 export function getUserInfo() {
-    return function(dispatch) {
+    const accessToken = getCookie('accessToken');
+    return function(dispatch: AppDispatch) {
         dispatch(getUserAction());
-        getUserRequest(getCookie('accessToken'))
-        .then((res)=> {                        
-            if(res.success) {                
-                dispatch(getUserSuccessAction({...res.user}));
-            }
-        })
-        .catch((err) => {
+        if(accessToken) {
+            getUserRequest(accessToken)
+            .then((res)=> {                                        
+                if(res.success) {                
+                    dispatch(getUserSuccessAction({...res.user}));
+                }
+            })
+            .catch((err) => {
+                dispatch(getUserFailedAction());
+            })
+            .finally(()=> {
+                dispatch(getUserFinishedAction());
+            })
+        } else {
             dispatch(getUserFailedAction());
-        })
-        .finally(()=> {
-            dispatch(getUserFinishedAction());
-        })              
+            dispatch(getUserFinishedAction())
+        }                      
     }
 }
 
-export function updateUser(form) {
-    return function(dispatch) {
+export function updateUser(form: TUser & { password?: string}) {
+    const accessToken = getCookie('accessToken');
+    return function(dispatch: AppDispatch) {
         dispatch(updateUserAction());
-        updateUserRequest(form, getCookie('accessToken'))
-        .then((res)=> {
-            dispatch(updateUserSuccessAction({...res.user}));
-        })
-        .catch((err) => {
-            dispatch(updateUserFailedAction());
-        })
+        if(accessToken) {
+            updateUserRequest(form, accessToken)
+            .then((res)=> {
+                dispatch(updateUserSuccessAction({...res.user}));
+            })
+            .catch((err) => {
+                dispatch(updateUserFailedAction());
+            })
+        } else {
+            dispatch(updateUserFailedAction())
+        }                
     }
 }
